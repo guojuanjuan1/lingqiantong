@@ -13,7 +13,6 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 
-/* Header */
 .header {
   background: linear-gradient(135deg, #07C160, #05a34e);
   color: #fff; text-align: center;
@@ -22,8 +21,14 @@ body {
 .header h1 { font-size: 20px; font-weight: 600; }
 .header .balance-display { font-size: 32px; font-weight: 300; margin: 12px 0 4px; }
 .header .balance-label { font-size: 12px; opacity: 0.8; }
+.header .settings-icon {
+  position: absolute; top: 20px; right: 16px;
+  font-size: 20px; cursor: pointer; opacity: 0.9;
+}
+.sync-status {
+  font-size: 11px; opacity: 0.7; margin-top: 4px;
+}
 
-/* Tabs */
 .tabs {
   display: flex; background: #fff;
   border-bottom: 1px solid #e8e8e8;
@@ -31,7 +36,7 @@ body {
 }
 .tab {
   flex: 1; text-align: center; padding: 12px 0;
-  font-size: 15px; color: #999; border: none; background: none;
+  font-size: 14px; color: #999; border: none; background: none;
   position: relative; cursor: pointer;
   -webkit-user-select: none; user-select: none;
 }
@@ -41,17 +46,14 @@ body {
   width: 24px; height: 3px; background: #07C160; border-radius: 2px;
 }
 
-/* Tab content */
 .tab-content { display: none; padding: 16px; }
 .tab-content.active { display: block; }
 
-/* Upload area */
 .upload-area {
   background: #fff; border-radius: 12px; padding: 32px 20px;
   text-align: center; margin-bottom: 16px;
   border: 2px dashed #ddd; transition: border-color 0.2s;
 }
-.upload-area.dragover { border-color: #07C160; }
 .upload-icon { font-size: 48px; margin-bottom: 12px; display: block; }
 .upload-text { font-size: 15px; color: #666; margin-bottom: 16px; }
 .upload-btn {
@@ -62,15 +64,6 @@ body {
 .upload-btn:active { background: #05a34e; }
 input[type="file"] { display: none; }
 
-/* Manual entry toggle */
-.manual-toggle {
-  text-align: center; margin-top: 12px;
-}
-.manual-toggle a {
-  color: #07C160; font-size: 13px; text-decoration: none;
-}
-
-/* OCR progress */
 .ocr-progress {
   background: #fff; border-radius: 12px; padding: 20px;
   margin-bottom: 16px; display: none;
@@ -90,7 +83,6 @@ input[type="file"] { display: none; }
   margin-bottom: 12px; object-fit: contain;
 }
 
-/* Form */
 .record-form {
   background: #fff; border-radius: 12px;
   padding: 20px; margin-bottom: 16px; display: none;
@@ -118,7 +110,6 @@ input[type="file"] { display: none; }
 .btn-secondary { background: #f5f5f5; color: #666; }
 .btn-secondary:active { background: #eee; }
 
-/* Records list */
 .summary-cards {
   display: flex; gap: 10px; margin-bottom: 16px;
 }
@@ -161,7 +152,6 @@ input[type="file"] { display: none; }
   text-align: center; padding: 60px 20px; color: #bbb; font-size: 15px;
 }
 
-/* Export & actions */
 .bottom-actions {
   padding: 16px 0; display: flex; gap: 12px;
 }
@@ -173,7 +163,6 @@ input[type="file"] { display: none; }
 .action-btn:active { background: #f5f5f5; }
 .action-btn.danger { color: #ff4d4f; }
 
-/* Toast */
 .toast {
   position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
   background: rgba(0,0,0,0.75); color: #fff; padding: 12px 24px;
@@ -182,11 +171,35 @@ input[type="file"] { display: none; }
 }
 .toast.show { opacity: 1; }
 
-/* Delete button */
 .delete-btn {
   background: none; border: none; color: #ff4d4f;
   font-size: 12px; cursor: pointer; padding: 4px 8px; margin-top: 6px;
 }
+
+/* Settings */
+.settings-card {
+  background: #fff; border-radius: 12px;
+  padding: 20px; margin-bottom: 16px;
+}
+.settings-card .form-title { margin-bottom: 8px; }
+.settings-desc { font-size: 13px; color: #999; margin-bottom: 16px; line-height: 1.5; }
+.token-display {
+  font-size: 13px; color: #07C160; word-break: break-all;
+  background: #f0faf4; padding: 10px 12px; border-radius: 8px;
+  margin-bottom: 12px;
+}
+.sync-info {
+  background: #fff; border-radius: 12px;
+  padding: 16px 20px; margin-bottom: 16px;
+  font-size: 13px; color: #666; line-height: 1.8;
+}
+.sync-dot {
+  display: inline-block; width: 8px; height: 8px;
+  border-radius: 50%; margin-right: 6px; vertical-align: middle;
+}
+.sync-dot.ok { background: #07C160; }
+.sync-dot.off { background: #ccc; }
+.sync-dot.err { background: #ff4d4f; }
 </style>
 </head>
 <body>
@@ -195,15 +208,17 @@ input[type="file"] { display: none; }
   <h1>零钱通账本</h1>
   <div class="balance-label">当前余额</div>
   <div class="balance-display" id="currentBalance">--</div>
+  <div class="sync-status" id="syncStatus"></div>
+  <div class="settings-icon" id="settingsIcon">⚙️</div>
 </div>
 
 <div class="tabs">
   <button class="tab active" data-tab="capture">拍照记账</button>
   <button class="tab" data-tab="records">账本</button>
   <button class="tab" data-tab="manual">手动录入</button>
+  <button class="tab" data-tab="settings">设置</button>
 </div>
 
-<!-- 拍照记账 -->
 <div class="tab-content active" id="tab-capture">
   <div class="upload-area" id="uploadArea">
     <span class="upload-icon">📷</span>
@@ -211,7 +226,6 @@ input[type="file"] { display: none; }
     <button class="upload-btn" id="uploadBtn">选择图片</button>
     <input type="file" id="fileInput" accept="image/*">
   </div>
-
   <div class="ocr-progress" id="ocrProgress">
     <img id="previewImg" class="preview-img" src="" alt="预览">
     <div class="progress-bar-wrap">
@@ -219,7 +233,6 @@ input[type="file"] { display: none; }
     </div>
     <div class="progress-text" id="progressText">准备识别...</div>
   </div>
-
   <div class="record-form" id="ocrForm">
     <div class="form-title">识别结果（可编辑）</div>
     <div class="form-group">
@@ -251,7 +264,6 @@ input[type="file"] { display: none; }
   </div>
 </div>
 
-<!-- 手动录入 -->
 <div class="tab-content" id="tab-manual">
   <div class="record-form show">
     <div class="form-title">手动录入</div>
@@ -284,7 +296,6 @@ input[type="file"] { display: none; }
   </div>
 </div>
 
-<!-- 账本 -->
 <div class="tab-content" id="tab-records">
   <div class="summary-cards">
     <div class="summary-card">
@@ -303,10 +314,41 @@ input[type="file"] { display: none; }
   </div>
 </div>
 
+<div class="tab-content" id="tab-settings">
+  <div class="settings-card">
+    <div class="form-title">云端同步</div>
+    <div class="settings-desc">数据自动同步到 GitHub 仓库，换手机、清缓存都不会丢失数据。</div>
+    <div id="tokenSection">
+      <div class="form-group">
+        <label class="form-label">GitHub Token</label>
+        <input class="form-input" type="password" id="tokenInput" placeholder="粘贴你的 GitHub Token">
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-primary" id="saveTokenBtn">保存 Token</button>
+      </div>
+    </div>
+    <div id="tokenSaved" style="display:none;">
+      <div class="token-display" id="tokenPreview"></div>
+      <div class="form-actions">
+        <button class="btn btn-secondary" id="clearTokenBtn">清除 Token</button>
+        <button class="btn btn-primary" id="forceSyncBtn">立即同步</button>
+      </div>
+    </div>
+  </div>
+  <div class="sync-info" id="syncInfo">
+    <div><span class="sync-dot off" id="syncDot"></span>同步状态：<span id="syncDetail">未配置</span></div>
+    <div style="margin-top:6px;">上次同步：<span id="lastSyncTime">无</span></div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
 const STORAGE_KEY = 'lingqiantong_records';
+const TOKEN_KEY = 'lingqiantong_token';
+const GITHUB_OWNER = 'guojuanjuan1';
+const GITHUB_REPO = 'lingqiantong';
+const DATA_FILE = 'data.json';
 
 function loadRecords() {
   try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
@@ -315,7 +357,12 @@ function loadRecords() {
 
 function saveRecords(records) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+  syncToGitHub();
 }
+
+function getToken() { return localStorage.getItem(TOKEN_KEY) || ''; }
+function setToken(t) { localStorage.setItem(TOKEN_KEY, t); }
+function clearToken() { localStorage.removeItem(TOKEN_KEY); }
 
 function showToast(msg) {
   const t = document.getElementById('toast');
@@ -336,6 +383,116 @@ function getLastBalance() {
   return records[records.length - 1].balanceAfter;
 }
 
+function updateSyncUI(status, detail) {
+  const dot = document.getElementById('syncDot');
+  const detailEl = document.getElementById('syncDetail');
+  dot.className = 'sync-dot ' + status;
+  detailEl.textContent = detail;
+  const headerStatus = document.getElementById('syncStatus');
+  if (status === 'ok') headerStatus.textContent = '☁️ 已同步';
+  else if (status === 'err') headerStatus.textContent = '⚠️ 同步失败';
+  else headerStatus.textContent = '';
+}
+
+/* ========== GitHub Sync ========== */
+let fileSha = null;
+
+async function syncToGitHub() {
+  const token = getToken();
+  if (!token) return;
+
+  const records = loadRecords();
+  const content = btoa(unescape(encodeURIComponent(JSON.stringify(records, null, 2))));
+
+  try {
+    const existing = await fetch(
+      `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${DATA_FILE}`,
+      { headers: { 'Authorization': `Bearer ${token}` } }
+    );
+    if (existing.ok) {
+      const data = await existing.json();
+      fileSha = data.sha;
+    }
+
+    const body = {
+      message: '同步账本数据 ' + new Date().toLocaleString('zh-CN'),
+      content: content,
+    };
+    if (fileSha) body.sha = fileSha;
+
+    const res = await fetch(
+      `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${DATA_FILE}`,
+      {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+      }
+    );
+
+    if (res.ok) {
+      const result = await res.json();
+      fileSha = result.content.sha;
+      updateSyncUI('ok', '同步成功');
+      document.getElementById('lastSyncTime').textContent = new Date().toLocaleString('zh-CN');
+      localStorage.setItem('lingqiantong_last_sync', new Date().toISOString());
+    } else {
+      const err = await res.json();
+      updateSyncUI('err', err.message || '同步失败');
+    }
+  } catch (e) {
+    updateSyncUI('err', '网络错误');
+  }
+}
+
+async function loadFromGitHub() {
+  const token = getToken();
+  if (!token) return;
+
+  updateSyncUI('off', '正在加载...');
+
+  try {
+    const res = await fetch(
+      `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${DATA_FILE}`,
+      { headers: { 'Authorization': `Bearer ${token}` } }
+    );
+
+    if (res.ok) {
+      const data = await res.json();
+      fileSha = data.sha;
+      const content = decodeURIComponent(escape(atob(data.content.replace(/\n/g, ''))));
+      const remoteRecords = JSON.parse(content);
+      const localRecords = loadRecords();
+
+      if (remoteRecords.length > 0) {
+        const merged = mergeRecords(localRecords, remoteRecords);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(merged));
+      }
+      updateSyncUI('ok', '已连接');
+      document.getElementById('lastSyncTime').textContent = new Date().toLocaleString('zh-CN');
+    } else if (res.status === 404) {
+      updateSyncUI('ok', '已连接（暂无云端数据）');
+    } else {
+      const err = await res.json();
+      updateSyncUI('err', err.message || '加载失败');
+    }
+  } catch (e) {
+    updateSyncUI('err', '网络错误');
+  }
+  updateHeader();
+}
+
+function mergeRecords(local, remote) {
+  const map = new Map();
+  remote.forEach(r => map.set(r.id, r));
+  local.forEach(r => map.set(r.id, r));
+  const merged = Array.from(map.values());
+  merged.sort((a, b) => new Date(a.date) - new Date(b.date));
+  return merged;
+}
+
 /* ========== Tabs ========== */
 document.querySelectorAll('.tab').forEach(tab => {
   tab.addEventListener('click', () => {
@@ -347,7 +504,61 @@ document.querySelectorAll('.tab').forEach(tab => {
     if (tab.dataset.tab === 'manual') {
       document.getElementById('manualDate').value = new Date().toISOString().split('T')[0];
     }
+    if (tab.dataset.tab === 'settings') renderSettings();
   });
+});
+
+document.getElementById('settingsIcon').addEventListener('click', () => {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  document.querySelector('[data-tab="settings"]').classList.add('active');
+  document.getElementById('tab-settings').classList.add('active');
+  renderSettings();
+});
+
+function renderSettings() {
+  const token = getToken();
+  if (token) {
+    document.getElementById('tokenSection').style.display = 'none';
+    document.getElementById('tokenSaved').style.display = 'block';
+    document.getElementById('tokenPreview').textContent =
+      token.substring(0, 12) + '****' + token.substring(token.length - 4);
+  } else {
+    document.getElementById('tokenSection').style.display = 'block';
+    document.getElementById('tokenSaved').style.display = 'none';
+  }
+  const lastSync = localStorage.getItem('lingqiantong_last_sync');
+  if (lastSync) {
+    document.getElementById('lastSyncTime').textContent = new Date(lastSync).toLocaleString('zh-CN');
+  }
+}
+
+document.getElementById('saveTokenBtn').addEventListener('click', () => {
+  const token = document.getElementById('tokenInput').value.trim();
+  if (!token) { showToast('请输入 Token'); return; }
+  setToken(token);
+  document.getElementById('tokenInput').value = '';
+  renderSettings();
+  showToast('Token 已保存');
+  loadFromGitHub();
+});
+
+document.getElementById('clearTokenBtn').addEventListener('click', () => {
+  if (!confirm('确定清除 Token？清除后数据不再同步到云端。')) return;
+  clearToken();
+  fileSha = null;
+  renderSettings();
+  updateSyncUI('off', '未配置');
+  document.getElementById('syncStatus').textContent = '';
+  showToast('Token 已清除');
+});
+
+document.getElementById('forceSyncBtn').addEventListener('click', async () => {
+  showToast('同步中...');
+  await loadFromGitHub();
+  await syncToGitHub();
+  showToast('同步完成');
+  updateHeader();
 });
 
 /* ========== Upload & OCR ========== */
@@ -697,8 +908,7 @@ document.getElementById('exportBtn').addEventListener('click', () => {
   const header = '序号,日期,交易描述,变动前余额,变动金额,变动后余额,备注\n';
   const rows = records.map((r, i) => {
     return [
-      i + 1,
-      r.date,
+      i + 1, r.date,
       '"' + (r.description || '').replace(/"/g, '""') + '"',
       r.balanceBefore !== null ? r.balanceBefore : '',
       r.change,
@@ -722,6 +932,7 @@ document.getElementById('clearBtn').addEventListener('click', () => {
   localStorage.removeItem(STORAGE_KEY);
   renderRecords();
   updateHeader();
+  syncToGitHub();
   showToast('已清空');
 });
 
@@ -740,6 +951,9 @@ function updateHeader() {
 /* ========== Init ========== */
 updateHeader();
 document.getElementById('manualDate').value = new Date().toISOString().split('T')[0];
+if (getToken()) {
+  loadFromGitHub();
+}
 </script>
 </body>
 </html>
