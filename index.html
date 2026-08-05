@@ -12,7 +12,6 @@ body {
   background: #ededed; color: #333; min-height: 100vh;
   -webkit-tap-highlight-color: transparent;
 }
-
 .header {
   background: linear-gradient(135deg, #07C160, #05a34e);
   color: #fff; text-align: center;
@@ -26,7 +25,6 @@ body {
   font-size: 20px; cursor: pointer; opacity: 0.9;
 }
 .sync-status { font-size: 11px; opacity: 0.7; margin-top: 4px; }
-
 .tabs {
   display: flex; background: #fff;
   border-bottom: 1px solid #e8e8e8;
@@ -43,14 +41,11 @@ body {
   content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
   width: 24px; height: 3px; background: #07C160; border-radius: 2px;
 }
-
 .tab-content { display: none; padding: 16px; }
 .tab-content.active { display: block; }
-
 .upload-area {
   background: #fff; border-radius: 12px; padding: 32px 20px;
-  text-align: center; margin-bottom: 16px;
-  border: 2px dashed #ddd;
+  text-align: center; margin-bottom: 16px; border: 2px dashed #ddd;
 }
 .upload-icon { font-size: 48px; margin-bottom: 12px; display: block; }
 .upload-text { font-size: 15px; color: #666; margin-bottom: 16px; }
@@ -61,7 +56,6 @@ body {
 }
 .upload-btn:active { background: #05a34e; }
 input[type="file"] { display: none; }
-
 .ocr-progress {
   background: #fff; border-radius: 12px; padding: 20px;
   margin-bottom: 16px; display: none;
@@ -80,25 +74,18 @@ input[type="file"] { display: none; }
   max-width: 100%; max-height: 200px; border-radius: 8px;
   margin-bottom: 12px; object-fit: contain; cursor: pointer;
 }
-
-/* Fullscreen image overlay */
 .img-overlay {
   display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
   background: rgba(0,0,0,0.9); z-index: 1000;
   justify-content: center; align-items: center;
 }
 .img-overlay.show { display: flex; }
-.img-overlay img {
-  max-width: 95%; max-height: 95%; object-fit: contain;
-  border-radius: 4px;
-}
+.img-overlay img { max-width: 95%; max-height: 95%; object-fit: contain; border-radius: 4px; }
 .img-overlay-close {
   position: absolute; top: 16px; right: 16px;
   color: #fff; font-size: 28px; cursor: pointer;
   background: none; border: none; padding: 8px;
 }
-
-/* Multi-record OCR result list */
 .ocr-result-list {
   background: #fff; border-radius: 12px;
   padding: 16px; margin-bottom: 16px; display: none;
@@ -107,22 +94,26 @@ input[type="file"] { display: none; }
 .ocr-result-title { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
 .ocr-result-hint { font-size: 12px; color: #999; margin-bottom: 14px; }
 .ocr-item {
-  display: flex; align-items: center; padding: 12px 0;
-  border-bottom: 1px solid #f0f0f0;
+  display: flex; align-items: flex-start; padding: 12px 0;
+  border-bottom: 1px solid #f0f0f0; gap: 10px;
 }
 .ocr-item:last-child { border-bottom: none; }
-.ocr-item-check { margin-right: 12px; width: 20px; height: 20px; accent-color: #07C160; }
-.ocr-item-info { flex: 1; }
-.ocr-item-desc { font-size: 14px; font-weight: 500; }
-.ocr-item-date { font-size: 12px; color: #999; margin-top: 2px; }
-.ocr-item-amount { font-size: 16px; font-weight: 600; text-align: right; min-width: 90px; }
-.ocr-item-amount.pos { color: #07C160; }
-.ocr-item-amount.neg { color: #ff4d4f; }
-.ocr-item-filtered { opacity: 0.4; }
-.ocr-item-filtered .ocr-item-desc::after {
-  content: '（已过滤）'; font-size: 11px; color: #999; font-weight: 400; margin-left: 6px;
+.ocr-item-check { margin-top: 4px; width: 20px; height: 20px; accent-color: #07C160; flex-shrink: 0; }
+.ocr-item-info { flex: 1; min-width: 0; }
+.ocr-item-date { font-size: 12px; color: #999; margin-bottom: 4px; }
+.ocr-item-row { display: flex; gap: 8px; align-items: center; }
+.ocr-edit-desc {
+  flex: 1; font-size: 14px; padding: 6px 8px; border: 1px solid #e8e8e8;
+  border-radius: 6px; min-width: 0;
+  -webkit-appearance: none; appearance: none; background: #fafafa;
 }
-
+.ocr-edit-amount {
+  width: 100px; font-size: 15px; font-weight: 600; padding: 6px 8px;
+  border: 1px solid #e8e8e8; border-radius: 6px; text-align: right; flex-shrink: 0;
+  -webkit-appearance: none; appearance: none; background: #fafafa;
+}
+.ocr-edit-desc:focus, .ocr-edit-amount:focus { border-color: #07C160; outline: none; background: #fff; }
+.ocr-item-filtered { opacity: 0.4; }
 .record-form {
   background: #fff; border-radius: 12px;
   padding: 20px; margin-bottom: 16px; display: none;
@@ -134,8 +125,7 @@ input[type="file"] { display: none; }
 .form-input {
   width: 100%; padding: 10px 12px; border: 1px solid #e8e8e8;
   border-radius: 8px; font-size: 15px; color: #333;
-  -webkit-appearance: none; appearance: none;
-  background: #fafafa;
+  -webkit-appearance: none; appearance: none; background: #fafafa;
 }
 .form-input:focus { border-color: #07C160; outline: none; background: #fff; }
 .form-row { display: flex; gap: 12px; }
@@ -149,21 +139,13 @@ input[type="file"] { display: none; }
 .btn-primary:active { background: #05a34e; }
 .btn-secondary { background: #f5f5f5; color: #666; }
 .btn-secondary:active { background: #eee; }
-
 .summary-cards { display: flex; gap: 10px; margin-bottom: 16px; }
-.summary-card {
-  flex: 1; background: #fff; border-radius: 10px;
-  padding: 14px 12px; text-align: center;
-}
+.summary-card { flex: 1; background: #fff; border-radius: 10px; padding: 14px 12px; text-align: center; }
 .summary-card .label { font-size: 11px; color: #999; }
 .summary-card .value { font-size: 18px; font-weight: 600; margin-top: 4px; }
 .summary-card .value.income { color: #07C160; }
 .summary-card .value.expense { color: #ff4d4f; }
-
-.record-card {
-  background: #fff; border-radius: 10px;
-  padding: 14px 16px; margin-bottom: 10px;
-}
+.record-card { background: #fff; border-radius: 10px; padding: 14px 16px; margin-bottom: 10px; }
 .record-top { display: flex; justify-content: space-between; align-items: center; }
 .record-desc { font-size: 15px; font-weight: 500; }
 .record-amount { font-size: 17px; font-weight: 600; }
@@ -188,13 +170,11 @@ input[type="file"] { display: none; }
 .empty-state { text-align: center; padding: 60px 20px; color: #bbb; font-size: 15px; }
 .bottom-actions { padding: 16px 0; display: flex; gap: 12px; }
 .action-btn {
-  flex: 1; padding: 12px; border-radius: 8px;
-  font-size: 14px; border: none; cursor: pointer;
+  flex: 1; padding: 12px; border-radius: 8px; font-size: 14px; border: none; cursor: pointer;
   background: #fff; color: #333; font-weight: 500;
 }
 .action-btn:active { background: #f5f5f5; }
 .action-btn.danger { color: #ff4d4f; }
-
 .toast {
   position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
   background: rgba(0,0,0,0.75); color: #fff; padding: 12px 24px;
@@ -206,22 +186,16 @@ input[type="file"] { display: none; }
   background: none; border: none; color: #ff4d4f;
   font-size: 12px; cursor: pointer; padding: 4px 8px; margin-top: 6px;
 }
-
-.settings-card {
-  background: #fff; border-radius: 12px;
-  padding: 20px; margin-bottom: 16px;
-}
+.settings-card { background: #fff; border-radius: 12px; padding: 20px; margin-bottom: 16px; }
 .settings-card .form-title { margin-bottom: 8px; }
 .settings-desc { font-size: 13px; color: #999; margin-bottom: 16px; line-height: 1.5; }
 .token-display {
   font-size: 13px; color: #07C160; word-break: break-all;
-  background: #f0faf4; padding: 10px 12px; border-radius: 8px;
-  margin-bottom: 12px;
+  background: #f0faf4; padding: 10px 12px; border-radius: 8px; margin-bottom: 12px;
 }
 .sync-info {
   background: #fff; border-radius: 12px;
-  padding: 16px 20px; margin-bottom: 16px;
-  font-size: 13px; color: #666; line-height: 1.8;
+  padding: 16px 20px; margin-bottom: 16px; font-size: 13px; color: #666; line-height: 1.8;
 }
 .sync-dot {
   display: inline-block; width: 8px; height: 8px;
@@ -252,20 +226,18 @@ input[type="file"] { display: none; }
 <div class="tab-content active" id="tab-capture">
   <div class="upload-area" id="uploadArea">
     <span class="upload-icon">📷</span>
-    <div class="upload-text">上传零钱通明细截图，自动识别多条交易</div>
+    <div class="upload-text">上传零钱通明细截图（支持多张），自动识别交易</div>
     <button class="upload-btn" id="uploadBtn">选择图片</button>
-    <input type="file" id="fileInput" accept="image/*">
+    <input type="file" id="fileInput" accept="image/*" multiple>
   </div>
   <div class="ocr-progress" id="ocrProgress">
     <img id="previewImg" class="preview-img" src="" alt="预览">
-    <div class="progress-bar-wrap">
-      <div class="progress-bar" id="progressBar"></div>
-    </div>
+    <div class="progress-bar-wrap"><div class="progress-bar" id="progressBar"></div></div>
     <div class="progress-text" id="progressText">准备识别...</div>
   </div>
   <div class="ocr-result-list" id="ocrResultList">
     <div class="ocr-result-title">识别结果</div>
-    <div class="ocr-result-hint">已自动过滤「收益入账」，勾选要记录的交易</div>
+    <div class="ocr-result-hint">已自动过滤「收益入账」· 描述和金额可直接编辑修正</div>
     <div id="ocrItems"></div>
     <div class="form-actions">
       <button class="btn btn-secondary" id="ocrCancelAll">取消</button>
@@ -304,14 +276,8 @@ input[type="file"] { display: none; }
 
 <div class="tab-content" id="tab-records">
   <div class="summary-cards">
-    <div class="summary-card">
-      <div class="label">总收入</div>
-      <div class="value income" id="totalIncome">0.00</div>
-    </div>
-    <div class="summary-card">
-      <div class="label">总支出</div>
-      <div class="value expense" id="totalExpense">0.00</div>
-    </div>
+    <div class="summary-card"><div class="label">总收入</div><div class="value income" id="totalIncome">0.00</div></div>
+    <div class="summary-card"><div class="label">总支出</div><div class="value expense" id="totalExpense">0.00</div></div>
   </div>
   <div id="recordList"></div>
   <div class="bottom-actions" id="bottomActions" style="display:none;">
@@ -323,7 +289,7 @@ input[type="file"] { display: none; }
 <div class="tab-content" id="tab-settings">
   <div class="settings-card">
     <div class="form-title">初始余额</div>
-    <div class="settings-desc">首次使用时设置当前零钱通余额，后续交易的变动前后余额会基于此自动计算。</div>
+    <div class="settings-desc">首次使用时设置当前零钱通余额，后续交易余额基于此自动计算。</div>
     <div class="form-row">
       <div class="form-group">
         <input class="form-input" type="number" id="initBalanceInput" placeholder="输入当前零钱通余额" step="0.01">
@@ -344,9 +310,7 @@ input[type="file"] { display: none; }
         <label class="form-label">GitHub Token</label>
         <input class="form-input" type="password" id="tokenInput" placeholder="粘贴你的 GitHub Token">
       </div>
-      <div class="form-actions">
-        <button class="btn btn-primary" id="saveTokenBtn">保存 Token</button>
-      </div>
+      <div class="form-actions"><button class="btn btn-primary" id="saveTokenBtn">保存 Token</button></div>
     </div>
     <div id="tokenSaved" style="display:none;">
       <div class="token-display" id="tokenPreview"></div>
@@ -371,133 +335,80 @@ input[type="file"] { display: none; }
 <script>
 const STORAGE_KEY = 'lingqiantong_records';
 const TOKEN_KEY = 'lingqiantong_token';
+const INIT_BALANCE_KEY = 'lingqiantong_init_balance';
 const GITHUB_OWNER = 'guojuanjuan1';
 const GITHUB_REPO = 'lingqiantong';
 const DATA_FILE = 'data.json';
-
-const INIT_BALANCE_KEY = 'lingqiantong_init_balance';
 const IGNORE_KEYWORDS = ['收益入账', '收益发放', '基金收益'];
 
-function loadRecords() {
-  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
-  catch { return []; }
-}
-
-function saveRecords(records) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
-  syncToGitHub();
-}
-
+function loadRecords() { try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; } catch { return []; } }
+function saveRecords(records) { localStorage.setItem(STORAGE_KEY, JSON.stringify(records)); syncToGitHub(); }
 function getToken() { return localStorage.getItem(TOKEN_KEY) || ''; }
 function setToken(t) { localStorage.setItem(TOKEN_KEY, t); }
 function clearTokenStore() { localStorage.removeItem(TOKEN_KEY); }
-
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 1500);
-}
-
-function formatMoney(n) {
-  const num = parseFloat(n);
-  if (isNaN(num)) return '--';
-  return num.toFixed(2);
-}
-
-function getInitBalance() {
-  const v = localStorage.getItem(INIT_BALANCE_KEY);
-  return v !== null ? parseFloat(v) : null;
-}
-
+function getInitBalance() { const v = localStorage.getItem(INIT_BALANCE_KEY); return v !== null ? parseFloat(v) : null; }
 function getLastBalance() {
   const records = loadRecords();
   if (records.length === 0) return getInitBalance();
   return records[records.length - 1].balanceAfter;
 }
-
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 1500);
+}
+function formatMoney(n) { const num = parseFloat(n); if (isNaN(num)) return '--'; return num.toFixed(2); }
+function today() { return new Date().toISOString().split('T')[0]; }
 function updateSyncUI(status, detail) {
-  const dot = document.getElementById('syncDot');
-  const detailEl = document.getElementById('syncDetail');
-  dot.className = 'sync-dot ' + status;
-  detailEl.textContent = detail;
-  const headerStatus = document.getElementById('syncStatus');
-  if (status === 'ok') headerStatus.textContent = '☁️ 已同步';
-  else if (status === 'err') headerStatus.textContent = '⚠️ 同步失败';
-  else headerStatus.textContent = '';
+  document.getElementById('syncDot').className = 'sync-dot ' + status;
+  document.getElementById('syncDetail').textContent = detail;
+  const h = document.getElementById('syncStatus');
+  if (status === 'ok') h.textContent = '☁️ 已同步';
+  else if (status === 'err') h.textContent = '⚠️ 同步失败';
+  else h.textContent = '';
 }
 
 /* ========== GitHub Sync ========== */
 let fileSha = null;
-
+function buildSyncData() {
+  return { initBalance: getInitBalance(), records: loadRecords() };
+}
 async function syncToGitHub() {
-  const token = getToken();
-  if (!token) return;
-  const records = loadRecords();
-  const content = btoa(unescape(encodeURIComponent(JSON.stringify(records, null, 2))));
+  const token = getToken(); if (!token) return;
+  const content = btoa(unescape(encodeURIComponent(JSON.stringify(buildSyncData(), null, 2))));
   try {
-    const existing = await fetch(
-      `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${DATA_FILE}`,
-      { headers: { 'Authorization': `Bearer ${token}` } }
-    );
-    if (existing.ok) {
-      const data = await existing.json();
-      fileSha = data.sha;
-    }
+    const existing = await fetch(`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${DATA_FILE}`, { headers: { 'Authorization': `Bearer ${token}` } });
+    if (existing.ok) fileSha = (await existing.json()).sha;
     const body = { message: '同步账本 ' + new Date().toLocaleString('zh-CN'), content };
     if (fileSha) body.sha = fileSha;
-    const res = await fetch(
-      `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${DATA_FILE}`,
-      { method: 'PUT', headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }, body: JSON.stringify(body) }
-    );
-    if (res.ok) {
-      const result = await res.json();
-      fileSha = result.content.sha;
-      updateSyncUI('ok', '同步成功');
-      const now = new Date().toLocaleString('zh-CN');
-      document.getElementById('lastSyncTime').textContent = now;
-      localStorage.setItem('lingqiantong_last_sync', new Date().toISOString());
-    } else {
-      updateSyncUI('err', '同步失败');
-    }
+    const res = await fetch(`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${DATA_FILE}`, {
+      method: 'PUT', headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }, body: JSON.stringify(body)
+    });
+    if (res.ok) { fileSha = (await res.json()).content.sha; updateSyncUI('ok', '同步成功'); document.getElementById('lastSyncTime').textContent = new Date().toLocaleString('zh-CN'); localStorage.setItem('lingqiantong_last_sync', new Date().toISOString()); }
+    else updateSyncUI('err', '同步失败');
   } catch { updateSyncUI('err', '网络错误'); }
 }
-
 async function loadFromGitHub() {
-  const token = getToken();
-  if (!token) return;
+  const token = getToken(); if (!token) return;
   updateSyncUI('off', '正在加载...');
   try {
-    const res = await fetch(
-      `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${DATA_FILE}`,
-      { headers: { 'Authorization': `Bearer ${token}` } }
-    );
+    const res = await fetch(`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${DATA_FILE}`, { headers: { 'Authorization': `Bearer ${token}` } });
     if (res.ok) {
-      const data = await res.json();
-      fileSha = data.sha;
-      const content = decodeURIComponent(escape(atob(data.content.replace(/\n/g, ''))));
-      const remoteRecords = JSON.parse(content);
-      const localRecords = loadRecords();
-      if (remoteRecords.length > 0) {
-        const merged = mergeRecords(localRecords, remoteRecords);
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(merged));
+      const data = await res.json(); fileSha = data.sha;
+      const raw = JSON.parse(decodeURIComponent(escape(atob(data.content.replace(/\n/g, '')))));
+      let remoteRecords, remoteInitBalance;
+      if (Array.isArray(raw)) { remoteRecords = raw; remoteInitBalance = null; }
+      else { remoteRecords = raw.records || []; remoteInitBalance = raw.initBalance; }
+      if (remoteInitBalance !== null && remoteInitBalance !== undefined && getInitBalance() === null) {
+        localStorage.setItem(INIT_BALANCE_KEY, remoteInitBalance.toString());
       }
-      updateSyncUI('ok', '已连接');
-      document.getElementById('lastSyncTime').textContent = new Date().toLocaleString('zh-CN');
-    } else if (res.status === 404) {
-      updateSyncUI('ok', '已连接（暂无云端数据）');
-    } else {
-      updateSyncUI('err', '加载失败');
-    }
+      const local = loadRecords();
+      if (remoteRecords.length > 0) { const map = new Map(); remoteRecords.forEach(r => map.set(r.id, r)); local.forEach(r => map.set(r.id, r)); localStorage.setItem(STORAGE_KEY, JSON.stringify(Array.from(map.values()).sort((a,b) => new Date(a.date) - new Date(b.date)))); }
+      updateSyncUI('ok', '已连接'); document.getElementById('lastSyncTime').textContent = new Date().toLocaleString('zh-CN');
+    } else if (res.status === 404) updateSyncUI('ok', '已连接（暂无云端数据）');
+    else updateSyncUI('err', '加载失败');
   } catch { updateSyncUI('err', '网络错误'); }
   updateHeader();
-}
-
-function mergeRecords(local, remote) {
-  const map = new Map();
-  remote.forEach(r => map.set(r.id, r));
-  local.forEach(r => map.set(r.id, r));
-  return Array.from(map.values()).sort((a, b) => new Date(a.date) - new Date(b.date));
 }
 
 /* ========== Tabs ========== */
@@ -520,81 +431,88 @@ document.getElementById('settingsIcon').addEventListener('click', () => {
   renderSettings();
 });
 
-function today() { return new Date().toISOString().split('T')[0]; }
-
 /* ========== Settings ========== */
 document.getElementById('saveInitBalance').addEventListener('click', () => {
   const val = parseFloat(document.getElementById('initBalanceInput').value);
   if (isNaN(val)) { showToast('请输入有效金额'); return; }
   localStorage.setItem(INIT_BALANCE_KEY, val.toString());
-  renderSettings();
-  updateHeader();
+  renderSettings(); updateHeader(); syncToGitHub();
   showToast('初始余额已保存: ¥' + formatMoney(val));
 });
-
 function renderSettings() {
   const initBal = getInitBalance();
   if (initBal !== null) {
     document.getElementById('initBalanceInput').value = initBal;
     document.getElementById('initBalanceDisplay').style.display = 'block';
     document.getElementById('initBalanceValue').textContent = '当前初始余额: ¥' + formatMoney(initBal);
-  } else {
-    document.getElementById('initBalanceDisplay').style.display = 'none';
-  }
-
+  } else { document.getElementById('initBalanceDisplay').style.display = 'none'; }
   const token = getToken();
   if (token) {
     document.getElementById('tokenSection').style.display = 'none';
     document.getElementById('tokenSaved').style.display = 'block';
     document.getElementById('tokenPreview').textContent = token.substring(0, 12) + '****' + token.substring(token.length - 4);
-  } else {
-    document.getElementById('tokenSection').style.display = 'block';
-    document.getElementById('tokenSaved').style.display = 'none';
-  }
-  const lastSync = localStorage.getItem('lingqiantong_last_sync');
-  if (lastSync) document.getElementById('lastSyncTime').textContent = new Date(lastSync).toLocaleString('zh-CN');
+  } else { document.getElementById('tokenSection').style.display = 'block'; document.getElementById('tokenSaved').style.display = 'none'; }
+  const ls = localStorage.getItem('lingqiantong_last_sync');
+  if (ls) document.getElementById('lastSyncTime').textContent = new Date(ls).toLocaleString('zh-CN');
 }
 document.getElementById('saveTokenBtn').addEventListener('click', () => {
   const token = document.getElementById('tokenInput').value.trim();
   if (!token) { showToast('请输入 Token'); return; }
-  setToken(token);
-  document.getElementById('tokenInput').value = '';
-  renderSettings();
-  showToast('Token 已保存');
-  loadFromGitHub();
+  setToken(token); document.getElementById('tokenInput').value = '';
+  renderSettings(); showToast('Token 已保存'); loadFromGitHub();
 });
 document.getElementById('clearTokenBtn').addEventListener('click', () => {
   if (!confirm('确定清除 Token？')) return;
   clearTokenStore(); fileSha = null; renderSettings();
-  updateSyncUI('off', '未配置');
-  document.getElementById('syncStatus').textContent = '';
-  showToast('Token 已清除');
+  updateSyncUI('off', '未配置'); document.getElementById('syncStatus').textContent = ''; showToast('Token 已清除');
 });
 document.getElementById('forceSyncBtn').addEventListener('click', async () => {
-  showToast('同步中...');
-  await loadFromGitHub();
-  await syncToGitHub();
-  showToast('同步完成');
-  updateHeader();
+  showToast('同步中...'); await loadFromGitHub(); await syncToGitHub(); showToast('同步完成'); updateHeader();
 });
 
-/* ========== Upload & OCR ========== */
+/* ========== Image preprocessing for better OCR ========== */
+function preprocessImage(file) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      const scale = Math.max(1, 2000 / Math.max(img.width, img.height));
+      canvas.width = img.width * scale;
+      canvas.height = img.height * scale;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const d = imageData.data;
+      for (let i = 0; i < d.length; i += 4) {
+        const gray = 0.299 * d[i] + 0.587 * d[i+1] + 0.114 * d[i+2];
+        const enhanced = gray < 140 ? 0 : 255;
+        d[i] = d[i+1] = d[i+2] = enhanced;
+      }
+      ctx.putImageData(imageData, 0, 0);
+      canvas.toBlob(resolve, 'image/png');
+    };
+    img.src = URL.createObjectURL(file);
+  });
+}
+
+/* ========== Upload & OCR (multi-image) ========== */
 const fileInput = document.getElementById('fileInput');
 const uploadBtn = document.getElementById('uploadBtn');
 const uploadArea = document.getElementById('uploadArea');
-
 uploadBtn.addEventListener('click', () => fileInput.click());
 uploadArea.addEventListener('click', (e) => { if (e.target !== uploadBtn) fileInput.click(); });
+
 fileInput.addEventListener('change', (e) => {
-  const file = e.target.files[0];
-  if (!file) return;
-  processImage(file);
+  const files = Array.from(e.target.files);
+  if (files.length === 0) return;
+  processMultipleImages(files);
   fileInput.value = '';
 });
 
 let ocrWorker = null;
+let parsedTransactions = [];
 
-async function processImage(file) {
+async function processMultipleImages(files) {
   const ocrProgress = document.getElementById('ocrProgress');
   const progressBar = document.getElementById('progressBar');
   const progressText = document.getElementById('progressText');
@@ -603,57 +521,70 @@ async function processImage(file) {
   uploadArea.style.display = 'none';
   ocrProgress.classList.add('show');
   document.getElementById('ocrResultList').classList.remove('show');
+  parsedTransactions = [];
 
-  const reader = new FileReader();
-  reader.onload = (e) => { previewImg.src = e.target.result; };
-  reader.readAsDataURL(file);
-
-  progressBar.style.width = '10%';
+  progressBar.style.width = '5%';
   progressText.textContent = '正在加载识别引擎...';
 
   try {
     if (!ocrWorker) {
       ocrWorker = await Tesseract.createWorker('chi_sim', 1, {
-        logger: (m) => {
-          if (m.status === 'recognizing text') {
-            const pct = Math.round(m.progress * 100);
-            progressBar.style.width = (10 + pct * 0.85) + '%';
-            progressText.textContent = '识别中... ' + pct + '%';
-          }
-        }
+        logger: () => {}
       });
     }
-    progressBar.style.width = '10%';
-    progressText.textContent = '识别中...';
-    const { data: { text } } = await ocrWorker.recognize(file);
+
+    for (let fi = 0; fi < files.length; fi++) {
+      const file = files[fi];
+      const reader = new FileReader();
+      reader.onload = (e) => { previewImg.src = e.target.result; };
+      reader.readAsDataURL(file);
+
+      const baseProgress = (fi / files.length) * 100;
+      const stepProgress = 100 / files.length;
+      progressText.textContent = `识别第 ${fi + 1}/${files.length} 张...`;
+      progressBar.style.width = baseProgress + '%';
+
+      const processed = await preprocessImage(file);
+      progressBar.style.width = (baseProgress + stepProgress * 0.3) + '%';
+
+      const { data: { text } } = await ocrWorker.recognize(processed);
+      progressBar.style.width = (baseProgress + stepProgress) + '%';
+
+      const items = parseOCRText(text);
+      parsedTransactions.push(...items);
+    }
+
     progressBar.style.width = '100%';
-    progressText.textContent = '识别完成';
-    parseOCRMulti(text);
+    progressText.textContent = `识别完成，共 ${files.length} 张图片`;
+
+    const seen = new Set();
+    parsedTransactions = parsedTransactions.filter(t => {
+      const key = t.date + t.time + t.change;
+      if (seen.has(key)) return false;
+      seen.add(key); return true;
+    });
+    parsedTransactions.sort((a, b) => new Date(a.date + 'T' + a.time) - new Date(b.date + 'T' + b.time));
+
+    renderOCRResults();
   } catch (err) {
     progressText.textContent = '识别失败: ' + err.message;
     setTimeout(() => { ocrProgress.classList.remove('show'); uploadArea.style.display = ''; }, 2000);
   }
 }
 
-/* ========== Multi-record OCR parser ========== */
-let parsedTransactions = [];
-
-function parseOCRMulti(text) {
+/* ========== OCR text parser (multi-record) ========== */
+function parseOCRText(text) {
   const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
   const transactions = [];
-
   const dateTimeRe = /(\d{4})[年\-\/.](\d{1,2})[月\-\/.](\d{1,2})\s+(\d{1,2}:\d{2}(:\d{2})?)/;
   const amountRe = /([+\-＋－])(\d+[\.,]?\d{0,2})/;
 
   for (let i = 0; i < lines.length; i++) {
     const dateMatch = lines[i].match(dateTimeRe);
     if (!dateMatch) continue;
-
     const date = `${dateMatch[1]}-${dateMatch[2].padStart(2,'0')}-${dateMatch[3].padStart(2,'0')}`;
     const time = dateMatch[4];
-
-    let description = '';
-    let changeAmount = 0;
+    let description = '', changeAmount = 0;
 
     for (let j = i - 1; j >= Math.max(0, i - 3); j--) {
       const amtMatch = lines[j].match(amountRe);
@@ -663,52 +594,32 @@ function parseOCRMulti(text) {
         const descLine = lines[j].replace(amountRe, '').replace(/[¥￥]/g, '').trim();
         if (descLine) description = descLine;
         if (!description && j > 0) {
-          const prevLine = lines[j - 1].trim();
-          if (prevLine && !prevLine.match(dateTimeRe) && !prevLine.match(/^余额/) && !prevLine.match(/^\d{4}[年\-]/)) {
-            description = prevLine;
-          }
+          const prev = lines[j-1].trim();
+          if (prev && !prev.match(dateTimeRe) && !prev.match(/^余额/) && !prev.match(/^\d{4}[年\-]/)) description = prev;
         }
         break;
       }
       if (!description) {
         const line = lines[j];
-        if (!line.match(dateTimeRe) && !line.match(/^余额/) && !line.match(/收入|支出/) && line.length > 1) {
-          description = line;
-        }
+        if (!line.match(dateTimeRe) && !line.match(/^余额/) && !line.match(/收入|支出/) && line.length > 1) description = line;
       }
     }
-
     if (!description) {
       for (let j = i - 1; j >= Math.max(0, i - 2); j--) {
         if (lines[j].length > 1 && !lines[j].match(dateTimeRe)) {
-          description = lines[j].replace(amountRe, '').replace(/[¥￥]/g, '').trim();
-          break;
+          description = lines[j].replace(amountRe, '').replace(/[¥￥]/g, '').trim(); break;
         }
       }
     }
-
     if (changeAmount === 0) continue;
-
     const descNoSpace = description.replace(/\s/g, '');
     const isIgnored = IGNORE_KEYWORDS.some(kw => descNoSpace.includes(kw));
-
-    transactions.push({
-      date, time, description: description || '未知交易',
-      change: Math.round(changeAmount * 100) / 100,
-      ignored: isIgnored, checked: !isIgnored
-    });
+    transactions.push({ date, time, description: description || '未知交易', change: Math.round(changeAmount * 100) / 100, ignored: isIgnored, checked: !isIgnored });
   }
-
-  transactions.sort((a, b) => {
-    const da = new Date(a.date + 'T' + a.time);
-    const db = new Date(b.date + 'T' + b.time);
-    return da - db;
-  });
-
-  parsedTransactions = transactions;
-  renderOCRResults();
+  return transactions;
 }
 
+/* ========== Render editable OCR results ========== */
 function renderOCRResults() {
   const container = document.getElementById('ocrItems');
   if (parsedTransactions.length === 0) {
@@ -716,81 +627,73 @@ function renderOCRResults() {
     document.getElementById('ocrResultList').classList.add('show');
     return;
   }
-
   container.innerHTML = parsedTransactions.map((t, i) => {
-    const isPos = t.change > 0;
-    const amountStr = (isPos ? '+' : '') + formatMoney(t.change);
-    const filteredClass = t.ignored ? ' ocr-item-filtered' : '';
+    const amountStr = (t.change > 0 ? '+' : '') + formatMoney(t.change);
+    const cls = t.ignored ? ' ocr-item-filtered' : '';
     return `
-      <div class="ocr-item${filteredClass}">
+      <div class="ocr-item${cls}" id="ocr-row-${i}">
         <input type="checkbox" class="ocr-item-check" data-idx="${i}" ${t.checked ? 'checked' : ''}>
         <div class="ocr-item-info">
-          <div class="ocr-item-desc">${escapeHtml(t.description)}</div>
           <div class="ocr-item-date">${t.date} ${t.time}</div>
+          <div class="ocr-item-row">
+            <input class="ocr-edit-desc" data-idx="${i}" data-field="desc" value="${escapeAttr(t.description)}">
+            <input class="ocr-edit-amount" data-idx="${i}" data-field="amount" value="${amountStr}">
+          </div>
         </div>
-        <div class="ocr-item-amount ${isPos ? 'pos' : 'neg'}">${amountStr}</div>
       </div>`;
   }).join('');
 
-  document.querySelectorAll('.ocr-item-check').forEach(cb => {
-    cb.addEventListener('change', (e) => {
-      parsedTransactions[parseInt(e.target.dataset.idx)].checked = e.target.checked;
+  container.querySelectorAll('.ocr-item-check').forEach(cb => {
+    cb.addEventListener('change', (e) => { parsedTransactions[parseInt(e.target.dataset.idx)].checked = e.target.checked; });
+  });
+  container.querySelectorAll('.ocr-edit-desc').forEach(el => {
+    el.addEventListener('change', (e) => { parsedTransactions[parseInt(e.target.dataset.idx)].description = e.target.value; });
+  });
+  container.querySelectorAll('.ocr-edit-amount').forEach(el => {
+    el.addEventListener('change', (e) => {
+      const val = parseFloat(e.target.value.replace(/[+＋,，]/g, '').replace(/[－]/g, '-'));
+      if (!isNaN(val)) parsedTransactions[parseInt(e.target.dataset.idx)].change = Math.round(val * 100) / 100;
     });
   });
-
   document.getElementById('ocrResultList').classList.add('show');
 }
+
+function escapeHtml(str) { const d = document.createElement('div'); d.textContent = str || ''; return d.innerHTML; }
+function escapeAttr(str) { return (str || '').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
 
 /* ========== OCR confirm / cancel ========== */
 document.getElementById('ocrCancelAll').addEventListener('click', () => {
   document.getElementById('ocrProgress').classList.remove('show');
   document.getElementById('ocrResultList').classList.remove('show');
-  uploadArea.style.display = '';
-  parsedTransactions = [];
+  uploadArea.style.display = ''; parsedTransactions = [];
 });
-
 document.getElementById('ocrConfirmAll').addEventListener('click', () => {
   const toAdd = parsedTransactions.filter(t => t.checked);
   if (toAdd.length === 0) { showToast('请至少勾选一条记录'); return; }
   addMultipleRecords(toAdd);
   document.getElementById('ocrProgress').classList.remove('show');
   document.getElementById('ocrResultList').classList.remove('show');
-  uploadArea.style.display = '';
-  parsedTransactions = [];
+  uploadArea.style.display = ''; parsedTransactions = [];
 });
 
-/* ========== Add multiple records (balance from running total) ========== */
+/* ========== Add multiple records ========== */
 function addMultipleRecords(items) {
   const records = loadRecords();
   let runningBalance = getLastBalance();
-
-  items.sort((a, b) => {
-    const da = new Date(a.date + 'T' + a.time);
-    const db = new Date(b.date + 'T' + b.time);
-    return da - db;
-  });
-
+  items.sort((a, b) => new Date(a.date + 'T' + a.time) - new Date(b.date + 'T' + b.time));
   for (const item of items) {
     const beforeVal = runningBalance;
     const afterVal = runningBalance !== null ? Math.round((runningBalance + item.change) * 100) / 100 : null;
-
     records.push({
       id: Date.now() + Math.floor(Math.random() * 1000),
-      date: item.date,
-      time: item.time || '',
-      description: item.description,
-      balanceBefore: beforeVal,
-      change: item.change,
-      balanceAfter: afterVal,
-      remark: ''
+      date: item.date, time: item.time || '',
+      description: item.description, balanceBefore: beforeVal,
+      change: item.change, balanceAfter: afterVal, remark: ''
     });
-
     if (afterVal !== null) runningBalance = afterVal;
   }
-
   records.sort((a, b) => new Date(a.date) - new Date(b.date));
-  saveRecords(records);
-  updateHeader();
+  saveRecords(records); updateHeader();
   showToast(`已添加 ${items.length} 条记录`);
 }
 
@@ -798,32 +701,23 @@ function addMultipleRecords(items) {
 document.getElementById('manualConfirm').addEventListener('click', () => {
   const change = document.getElementById('manualChange').value;
   if (!change) { showToast('请填写变动金额'); return; }
-
   const changeVal = parseFloat(String(change).replace(/[+＋,，]/g, '').replace(/[－]/g, '-')) || 0;
   const records = loadRecords();
   const lastBal = getLastBalance();
-  const beforeVal = lastBal;
   const afterVal = lastBal !== null ? Math.round((lastBal + changeVal) * 100) / 100 : null;
-
   records.push({
-    id: Date.now(),
-    date: document.getElementById('manualDate').value || today(),
+    id: Date.now(), date: document.getElementById('manualDate').value || today(), time: '',
     description: document.getElementById('manualDesc').value || '未知交易',
-    balanceBefore: beforeVal,
-    change: Math.round(changeVal * 100) / 100,
-    balanceAfter: afterVal,
-    remark: document.getElementById('manualRemark').value || ''
+    balanceBefore: lastBal, change: Math.round(changeVal * 100) / 100,
+    balanceAfter: afterVal, remark: document.getElementById('manualRemark').value || ''
   });
   records.sort((a, b) => new Date(a.date) - new Date(b.date));
-  saveRecords(records);
-  updateHeader();
-  showToast('添加成功');
+  saveRecords(records); updateHeader(); showToast('添加成功');
   document.getElementById('manualDate').value = today();
   document.getElementById('manualDesc').value = '';
   document.getElementById('manualChange').value = '';
   document.getElementById('manualRemark').value = '';
 });
-
 document.getElementById('manualReset').addEventListener('click', () => {
   document.getElementById('manualDate').value = today();
   document.getElementById('manualDesc').value = '';
@@ -848,20 +742,19 @@ function renderRecords() {
   records.forEach(r => { if (r.change > 0) totalIn += r.change; else totalOut += Math.abs(r.change); });
   document.getElementById('totalIncome').textContent = formatMoney(totalIn);
   document.getElementById('totalExpense').textContent = formatMoney(totalOut);
-
   const reversed = [...records].reverse();
   list.innerHTML = reversed.map(r => {
-    const isPositive = r.change >= 0;
-    const amountStr = (isPositive ? '+' : '') + formatMoney(r.change);
-    const dateParts = r.date ? r.date.split('-') : [];
-    const shortDate = dateParts.length === 3 ? dateParts[1] + '-' + dateParts[2] : r.date;
+    const isPos = r.change >= 0;
+    const amountStr = (isPos ? '+' : '') + formatMoney(r.change);
+    const dp = r.date ? r.date.split('-') : [];
+    const shortDate = dp.length === 3 ? dp[1] + '-' + dp[2] : r.date;
     const timeStr = r.time || '';
     const titleLine = timeStr ? `${shortDate} ${timeStr}（${r.description}）` : `${shortDate}（${r.description}）`;
     return `
       <div class="record-card" data-id="${r.id}">
         <div class="record-top" onclick="toggleDetail(${r.id})">
           <div><div class="record-desc">${escapeHtml(titleLine)}</div></div>
-          <div class="record-amount ${isPositive ? 'positive' : 'negative'}">${amountStr}</div>
+          <div class="record-amount ${isPos ? 'positive' : 'negative'}">${amountStr}</div>
         </div>
         <div class="record-bottom" onclick="toggleDetail(${r.id})">
           <span>${r.date}</span>
@@ -871,38 +764,22 @@ function renderRecords() {
           <div class="detail-row"><span>变动前余额</span><span>${r.balanceBefore !== null ? formatMoney(r.balanceBefore) : '--'}</span></div>
           <div class="detail-row"><span>变动金额</span><span>${amountStr}</span></div>
           <div class="detail-row"><span>变动后余额</span><span>${r.balanceAfter !== null ? formatMoney(r.balanceAfter) : '--'}</span></div>
-          <div style="margin-top:8px">
-            <label class="form-label">备注</label>
-            <input class="remark-edit" type="text" value="${escapeHtml(r.remark)}" placeholder="点击编辑备注"
-              onchange="updateRemark(${r.id}, this.value)">
+          <div style="margin-top:8px"><label class="form-label">备注</label>
+            <input class="remark-edit" type="text" value="${escapeAttr(r.remark)}" placeholder="点击编辑备注" onchange="updateRemark(${r.id}, this.value)">
           </div>
           <button class="delete-btn" onclick="deleteRecord(${r.id})">删除此条</button>
         </div>
       </div>`;
   }).join('');
 }
-
-function escapeHtml(str) {
-  const d = document.createElement('div');
-  d.textContent = str || '';
-  return d.innerHTML;
-}
-function toggleDetail(id) {
-  const el = document.getElementById('detail-' + id);
-  if (el) el.classList.toggle('show');
-}
+function toggleDetail(id) { const el = document.getElementById('detail-' + id); if (el) el.classList.toggle('show'); }
 function updateRemark(id, value) {
-  const records = loadRecords();
-  const r = records.find(r => r.id === id);
+  const records = loadRecords(); const r = records.find(r => r.id === id);
   if (r) { r.remark = value; saveRecords(records); showToast('备注已更新'); }
 }
 function deleteRecord(id) {
   if (!confirm('确定删除这条记录？')) return;
-  let records = loadRecords().filter(r => r.id !== id);
-  saveRecords(records);
-  renderRecords();
-  updateHeader();
-  showToast('已删除');
+  saveRecords(loadRecords().filter(r => r.id !== id)); renderRecords(); updateHeader(); showToast('已删除');
 }
 
 /* ========== Export ========== */
@@ -910,56 +787,38 @@ document.getElementById('exportBtn').addEventListener('click', () => {
   const records = loadRecords();
   if (records.length === 0) { showToast('暂无记录可导出'); return; }
   const BOM = '﻿';
-  const header = '序号,日期,交易描述,变动前余额,变动金额,变动后余额,备注\n';
+  const header = '序号,日期,时间,交易描述,变动前余额,变动金额,变动后余额,备注\n';
   const rows = records.map((r, i) => [
-    i + 1, r.date,
+    i + 1, r.date, r.time || '',
     '"' + (r.description || '').replace(/"/g, '""') + '"',
-    r.balanceBefore !== null ? r.balanceBefore : '',
-    r.change,
+    r.balanceBefore !== null ? r.balanceBefore : '', r.change,
     r.balanceAfter !== null ? r.balanceAfter : '',
     '"' + (r.remark || '').replace(/"/g, '""') + '"'
   ].join(',')).join('\n');
   const blob = new Blob([BOM + header + rows], { type: 'text/csv;charset=utf-8;' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = '零钱通账本_' + today() + '.csv';
-  a.click();
-  URL.revokeObjectURL(a.href);
-  showToast('导出成功');
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = '零钱通账本_' + today() + '.csv'; a.click();
+  URL.revokeObjectURL(a.href); showToast('导出成功');
 });
-
 document.getElementById('clearBtn').addEventListener('click', () => {
   if (!confirm('确定清空所有记录？此操作不可恢复！')) return;
-  localStorage.removeItem(STORAGE_KEY);
-  renderRecords(); updateHeader(); syncToGitHub();
-  showToast('已清空');
+  localStorage.removeItem(STORAGE_KEY); renderRecords(); updateHeader(); syncToGitHub(); showToast('已清空');
 });
 
 /* ========== Header ========== */
 function updateHeader() {
-  const records = loadRecords();
-  const el = document.getElementById('currentBalance');
-  if (records.length === 0) {
-    const initBal = getInitBalance();
-    el.textContent = initBal !== null ? '¥' + formatMoney(initBal) : '--';
-  } else {
-    const last = records[records.length - 1];
-    el.textContent = last.balanceAfter !== null ? '¥' + formatMoney(last.balanceAfter) : '--';
-  }
+  const records = loadRecords(); const el = document.getElementById('currentBalance');
+  if (records.length === 0) { const ib = getInitBalance(); el.textContent = ib !== null ? '¥' + formatMoney(ib) : '--'; }
+  else { const last = records[records.length - 1]; el.textContent = last.balanceAfter !== null ? '¥' + formatMoney(last.balanceAfter) : '--'; }
 }
 
 /* ========== Image enlarge ========== */
 document.getElementById('previewImg').addEventListener('click', () => {
-  const overlay = document.getElementById('imgOverlay');
   document.getElementById('imgOverlayImg').src = document.getElementById('previewImg').src;
-  overlay.classList.add('show');
+  document.getElementById('imgOverlay').classList.add('show');
 });
-document.getElementById('imgOverlayClose').addEventListener('click', () => {
-  document.getElementById('imgOverlay').classList.remove('show');
-});
-document.getElementById('imgOverlay').addEventListener('click', (e) => {
-  if (e.target === e.currentTarget) document.getElementById('imgOverlay').classList.remove('show');
-});
+document.getElementById('imgOverlayClose').addEventListener('click', () => { document.getElementById('imgOverlay').classList.remove('show'); });
+document.getElementById('imgOverlay').addEventListener('click', (e) => { if (e.target === e.currentTarget) document.getElementById('imgOverlay').classList.remove('show'); });
 
 /* ========== Init ========== */
 updateHeader();
