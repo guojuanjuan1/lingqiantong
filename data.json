@@ -88,5 +88,25 @@
     "change": -5000,
     "balanceAfter": 151575.68,
     "remark": ""
+  },
+  {
+    "id": 1785929198101,
+    "date": "2026-06-10",
+    "time": "19:12:03",
+    "description": "转 入 零钱 通 -来 自 银行 卡",
+    "balanceBefore": 151575.68,
+    "change": 135000,
+    "balanceAfter": 286575.68,
+    "remark": ""
+  },
+  {
+    "id": 1785929198031,
+    "date": "2026-06-16",
+    "time": "15:31:39",
+    "description": "零钱 通 转 出 -到 银行 卡",
+    "balanceBefore": 286575.68,
+    "change": -7819,
+    "balanceAfter": 278756.68,
+    "remark": ""
   }
 ]
