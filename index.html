@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>零钱通账本</title>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", sans-serif;
+  background: #ededed; color: #333; min-height: 100vh;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Header */
+.header {
+  background: linear-gradient(135deg, #07C160, #05a34e);
+  color: #fff; text-align: center;
+  padding: 20px 16px 16px; position: relative;
+}
+.header h1 { font-size: 20px; font-weight: 600; }
+.header .balance-display { font-size: 32px; font-weight: 300; margin: 12px 0 4px; }
+.header .balance-label { font-size: 12px; opacity: 0.8; }
+
+/* Tabs */
+.tabs {
+  display: flex; background: #fff;
+  border-bottom: 1px solid #e8e8e8;
+  position: sticky; top: 0; z-index: 10;
+}
+.tab {
+  flex: 1; text-align: center; padding: 12px 0;
+  font-size: 15px; color: #999; border: none; background: none;
+  position: relative; cursor: pointer;
+  -webkit-user-select: none; user-select: none;
+}
+.tab.active { color: #07C160; font-weight: 600; }
+.tab.active::after {
+  content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+  width: 24px; height: 3px; background: #07C160; border-radius: 2px;
+}
+
+/* Tab content */
+.tab-content { display: none; padding: 16px; }
+.tab-content.active { display: block; }
+
+/* Upload area */
+.upload-area {
+  background: #fff; border-radius: 12px; padding: 32px 20px;
+  text-align: center; margin-bottom: 16px;
+  border: 2px dashed #ddd; transition: border-color 0.2s;
+}
+.upload-area.dragover { border-color: #07C160; }
+.upload-icon { font-size: 48px; margin-bottom: 12px; display: block; }
+.upload-text { font-size: 15px; color: #666; margin-bottom: 16px; }
+.upload-btn {
+  display: inline-block; background: #07C160; color: #fff;
+  padding: 12px 32px; border-radius: 24px; font-size: 16px;
+  border: none; cursor: pointer; font-weight: 500;
+}
+.upload-btn:active { background: #05a34e; }
+input[type="file"] { display: none; }
+
+/* Manual entry toggle */
+.manual-toggle {
+  text-align: center; margin-top: 12px;
+}
+.manual-toggle a {
+  color: #07C160; font-size: 13px; text-decoration: none;
+}
+
+/* OCR progress */
+.ocr-progress {
+  background: #fff; border-radius: 12px; padding: 20px;
+  margin-bottom: 16px; display: none;
+}
+.ocr-progress.show { display: block; }
+.progress-bar-wrap {
+  height: 6px; background: #f0f0f0; border-radius: 3px;
+  overflow: hidden; margin: 12px 0 8px;
+}
+.progress-bar {
+  height: 100%; background: #07C160; border-radius: 3px;
+  transition: width 0.3s; width: 0%;
+}
+.progress-text { font-size: 13px; color: #999; text-align: center; }
+.preview-img {
+  max-width: 100%; max-height: 200px; border-radius: 8px;
+  margin-bottom: 12px; object-fit: contain;
+}
+
+/* Form */
+.record-form {
+  background: #fff; border-radius: 12px;
+  padding: 20px; margin-bottom: 16px; display: none;
+}
+.record-form.show { display: block; }
+.form-title { font-size: 16px; font-weight: 600; margin-bottom: 16px; }
+.form-group { margin-bottom: 14px; }
+.form-label { font-size: 13px; color: #999; margin-bottom: 6px; display: block; }
+.form-input {
+  width: 100%; padding: 10px 12px; border: 1px solid #e8e8e8;
+  border-radius: 8px; font-size: 15px; color: #333;
+  -webkit-appearance: none; appearance: none;
+  background: #fafafa; transition: border-color 0.2s;
+}
+.form-input:focus { border-color: #07C160; outline: none; background: #fff; }
+.form-row { display: flex; gap: 12px; }
+.form-row .form-group { flex: 1; }
+.form-actions { display: flex; gap: 12px; margin-top: 20px; }
+.btn {
+  flex: 1; padding: 12px; border-radius: 8px; font-size: 15px;
+  border: none; cursor: pointer; font-weight: 500;
+}
+.btn-primary { background: #07C160; color: #fff; }
+.btn-primary:active { background: #05a34e; }
+.btn-secondary { background: #f5f5f5; color: #666; }
+.btn-secondary:active { background: #eee; }
+
+/* Records list */
+.summary-cards {
+  display: flex; gap: 10px; margin-bottom: 16px;
+}
+.summary-card {
+  flex: 1; background: #fff; border-radius: 10px;
+  padding: 14px 12px; text-align: center;
+}
+.summary-card .label { font-size: 11px; color: #999; }
+.summary-card .value { font-size: 18px; font-weight: 600; margin-top: 4px; }
+.summary-card .value.income { color: #07C160; }
+.summary-card .value.expense { color: #ff4d4f; }
+
+.record-card {
+  background: #fff; border-radius: 10px;
+  padding: 14px 16px; margin-bottom: 10px;
+}
+.record-top { display: flex; justify-content: space-between; align-items: center; }
+.record-desc { font-size: 15px; font-weight: 500; }
+.record-amount { font-size: 17px; font-weight: 600; }
+.record-amount.positive { color: #07C160; }
+.record-amount.negative { color: #ff4d4f; }
+.record-bottom {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-top: 8px; font-size: 12px; color: #999;
+}
+.record-detail {
+  display: none; margin-top: 10px; padding-top: 10px;
+  border-top: 1px solid #f0f0f0; font-size: 13px; color: #666;
+}
+.record-detail.show { display: block; }
+.detail-row { display: flex; justify-content: space-between; margin-bottom: 6px; }
+.remark-edit {
+  width: 100%; padding: 8px 10px; border: 1px solid #e8e8e8;
+  border-radius: 6px; font-size: 13px; margin-top: 6px;
+  -webkit-appearance: none; appearance: none;
+}
+.remark-edit:focus { border-color: #07C160; outline: none; }
+
+.empty-state {
+  text-align: center; padding: 60px 20px; color: #bbb; font-size: 15px;
+}
+
+/* Export & actions */
+.bottom-actions {
+  padding: 16px 0; display: flex; gap: 12px;
+}
+.action-btn {
+  flex: 1; padding: 12px; border-radius: 8px;
+  font-size: 14px; border: none; cursor: pointer;
+  background: #fff; color: #333; font-weight: 500;
+}
+.action-btn:active { background: #f5f5f5; }
+.action-btn.danger { color: #ff4d4f; }
+
+/* Toast */
+.toast {
+  position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  background: rgba(0,0,0,0.75); color: #fff; padding: 12px 24px;
+  border-radius: 8px; font-size: 14px; z-index: 999;
+  opacity: 0; transition: opacity 0.3s; pointer-events: none;
+}
+.toast.show { opacity: 1; }
+
+/* Delete button */
+.delete-btn {
+  background: none; border: none; color: #ff4d4f;
+  font-size: 12px; cursor: pointer; padding: 4px 8px; margin-top: 6px;
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>零钱通账本</h1>
+  <div class="balance-label">当前余额</div>
+  <div class="balance-display" id="currentBalance">--</div>
+</div>
+
+<div class="tabs">
+  <button class="tab active" data-tab="capture">拍照记账</button>
+  <button class="tab" data-tab="records">账本</button>
+  <button class="tab" data-tab="manual">手动录入</button>
+</div>
+
+<!-- 拍照记账 -->
+<div class="tab-content active" id="tab-capture">
+  <div class="upload-area" id="uploadArea">
+    <span class="upload-icon">📷</span>
+    <div class="upload-text">上传零钱通截图，自动识别交易信息</div>
+    <button class="upload-btn" id="uploadBtn">选择图片</button>
+    <input type="file" id="fileInput" accept="image/*">
+  </div>
+
+  <div class="ocr-progress" id="ocrProgress">
+    <img id="previewImg" class="preview-img" src="" alt="预览">
+    <div class="progress-bar-wrap">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+    <div class="progress-text" id="progressText">准备识别...</div>
+  </div>
+
+  <div class="record-form" id="ocrForm">
+    <div class="form-title">识别结果（可编辑）</div>
+    <div class="form-group">
+      <label class="form-label">日期</label>
+      <input class="form-input" type="date" id="ocrDate">
+    </div>
+    <div class="form-group">
+      <label class="form-label">交易描述</label>
+      <input class="form-input" type="text" id="ocrDesc" placeholder="如：转入、转出、收益...">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">变动金额</label>
+        <input class="form-input" type="text" id="ocrChange" placeholder="+100 或 -50">
+      </div>
+      <div class="form-group">
+        <label class="form-label">变动后余额</label>
+        <input class="form-input" type="text" id="ocrAfter" placeholder="余额">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">备注（类型/原因）</label>
+      <input class="form-input" type="text" id="ocrRemark" placeholder="选填">
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-secondary" id="ocrCancel">取消</button>
+      <button class="btn btn-primary" id="ocrConfirm">确认添加</button>
+    </div>
+  </div>
+</div>
+
+<!-- 手动录入 -->
+<div class="tab-content" id="tab-manual">
+  <div class="record-form show">
+    <div class="form-title">手动录入</div>
+    <div class="form-group">
+      <label class="form-label">日期</label>
+      <input class="form-input" type="date" id="manualDate">
+    </div>
+    <div class="form-group">
+      <label class="form-label">交易描述</label>
+      <input class="form-input" type="text" id="manualDesc" placeholder="如：转入、转出、收益...">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">变动金额</label>
+        <input class="form-input" type="text" id="manualChange" placeholder="+100 或 -50">
+      </div>
+      <div class="form-group">
+        <label class="form-label">变动后余额</label>
+        <input class="form-input" type="text" id="manualAfter" placeholder="余额">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">备注（类型/原因）</label>
+      <input class="form-input" type="text" id="manualRemark" placeholder="选填">
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-secondary" id="manualReset">重置</button>
+      <button class="btn btn-primary" id="manualConfirm">确认添加</button>
+    </div>
+  </div>
+</div>
+
+<!-- 账本 -->
+<div class="tab-content" id="tab-records">
+  <div class="summary-cards">
+    <div class="summary-card">
+      <div class="label">总收入</div>
+      <div class="value income" id="totalIncome">0.00</div>
+    </div>
+    <div class="summary-card">
+      <div class="label">总支出</div>
+      <div class="value expense" id="totalExpense">0.00</div>
+    </div>
+  </div>
+  <div id="recordList"></div>
+  <div class="bottom-actions" id="bottomActions" style="display:none;">
+    <button class="action-btn" id="exportBtn">导出 CSV</button>
+    <button class="action-btn danger" id="clearBtn">清空记录</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const STORAGE_KEY = 'lingqiantong_records';
+
+function loadRecords() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+  catch { return []; }
+}
+
+function saveRecords(records) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 1500);
+}
+
+function formatMoney(n) {
+  const num = parseFloat(n);
+  if (isNaN(num)) return '--';
+  return num.toFixed(2);
+}
+
+function getLastBalance() {
+  const records = loadRecords();
+  if (records.length === 0) return null;
+  return records[records.length - 1].balanceAfter;
+}
+
+/* ========== Tabs ========== */
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
+    if (tab.dataset.tab === 'records') renderRecords();
+    if (tab.dataset.tab === 'manual') {
+      document.getElementById('manualDate').value = new Date().toISOString().split('T')[0];
+    }
+  });
+});
+
+/* ========== Upload & OCR ========== */
+const fileInput = document.getElementById('fileInput');
+const uploadBtn = document.getElementById('uploadBtn');
+const uploadArea = document.getElementById('uploadArea');
+
+uploadBtn.addEventListener('click', () => fileInput.click());
+uploadArea.addEventListener('click', (e) => {
+  if (e.target !== uploadBtn) fileInput.click();
+});
+
+fileInput.addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  processImage(file);
+  fileInput.value = '';
+});
+
+let ocrWorker = null;
+
+async function processImage(file) {
+  const ocrProgress = document.getElementById('ocrProgress');
+  const progressBar = document.getElementById('progressBar');
+  const progressText = document.getElementById('progressText');
+  const previewImg = document.getElementById('previewImg');
+
+  uploadArea.style.display = 'none';
+  ocrProgress.classList.add('show');
+  document.getElementById('ocrForm').classList.remove('show');
+
+  const reader = new FileReader();
+  reader.onload = (e) => { previewImg.src = e.target.result; };
+  reader.readAsDataURL(file);
+
+  progressBar.style.width = '10%';
+  progressText.textContent = '正在加载识别引擎...';
+
+  try {
+    if (!ocrWorker) {
+      ocrWorker = await Tesseract.createWorker('chi_sim', 1, {
+        logger: (m) => {
+          if (m.status === 'recognizing text') {
+            const pct = Math.round(m.progress * 100);
+            progressBar.style.width = (10 + pct * 0.85) + '%';
+            progressText.textContent = '识别中... ' + pct + '%';
+          }
+        }
+      });
+    }
+
+    progressBar.style.width = '10%';
+    progressText.textContent = '识别中...';
+
+    const { data: { text } } = await ocrWorker.recognize(file);
+
+    progressBar.style.width = '100%';
+    progressText.textContent = '识别完成';
+
+    parseOCRResult(text);
+  } catch (err) {
+    progressText.textContent = '识别失败: ' + err.message;
+    setTimeout(() => {
+      ocrProgress.classList.remove('show');
+      uploadArea.style.display = '';
+    }, 2000);
+  }
+}
+
+function parseOCRResult(text) {
+  const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
+
+  let date = '';
+  let description = '';
+  let changeAmount = '';
+  let balanceAfter = '';
+
+  const datePatterns = [
+    /(\d{4})[年\-\/.](\d{1,2})[月\-\/.](\d{1,2})/,
+    /(\d{1,2})[月\-\/.](\d{1,2})[日号]/,
+  ];
+
+  const typeKeywords = [
+    '转入', '转出', '收益', '消费', '提现', '红包', '付款',
+    '退款', '充值', '还款', '零钱通', '理财', '工资',
+    '微信红包', '转账', '商户', '扫码'
+  ];
+
+  const amountPattern = /[+\-＋－]?\s*¥?\s*(\d+[\.,]?\d{0,2})/g;
+  const balanceKeywords = ['余额', '账户余额', '零钱通余额', '剩余'];
+
+  const fullText = lines.join(' ');
+
+  for (const line of lines) {
+    for (const pattern of datePatterns) {
+      const match = line.match(pattern);
+      if (match) {
+        if (match.length === 4) {
+          date = `${match[1]}-${match[2].padStart(2,'0')}-${match[3].padStart(2,'0')}`;
+        } else if (match.length === 3) {
+          const year = new Date().getFullYear();
+          date = `${year}-${match[1].padStart(2,'0')}-${match[2].padStart(2,'0')}`;
+        }
+        break;
+      }
+    }
+    if (date) break;
+  }
+
+  for (const line of lines) {
+    for (const kw of typeKeywords) {
+      if (line.includes(kw)) {
+        description = line;
+        break;
+      }
+    }
+    if (description) break;
+  }
+
+  const amounts = [];
+  let m;
+  while ((m = amountPattern.exec(fullText)) !== null) {
+    const val = parseFloat(m[1].replace(',', '.'));
+    if (!isNaN(val) && val > 0) {
+      const prefix = fullText.substring(Math.max(0, m.index - 5), m.index);
+      amounts.push({ value: val, prefix, fullMatch: m[0], index: m.index });
+    }
+  }
+
+  for (const line of lines) {
+    for (const bkw of balanceKeywords) {
+      if (line.includes(bkw)) {
+        const bMatch = line.match(/(\d+[\.,]?\d{0,2})/);
+        if (bMatch) {
+          balanceAfter = bMatch[1].replace(',', '.');
+        }
+        break;
+      }
+    }
+    if (balanceAfter) break;
+  }
+
+  if (amounts.length > 0 && !changeAmount) {
+    const mainAmount = amounts.reduce((a, b) => a.value > b.value ? a : b);
+    const isOut = fullText.includes('转出') || fullText.includes('消费') ||
+                  fullText.includes('付款') || fullText.includes('提现') ||
+                  fullText.includes('还款') || mainAmount.fullMatch.includes('-') ||
+                  mainAmount.fullMatch.includes('－');
+    changeAmount = (isOut ? '-' : '+') + formatMoney(mainAmount.value);
+  }
+
+  if (!date) {
+    date = new Date().toISOString().split('T')[0];
+  }
+
+  document.getElementById('ocrDate').value = date;
+  document.getElementById('ocrDesc').value = description;
+  document.getElementById('ocrChange').value = changeAmount;
+  document.getElementById('ocrAfter').value = balanceAfter;
+  document.getElementById('ocrRemark').value = '';
+
+  setTimeout(() => {
+    document.getElementById('ocrForm').classList.add('show');
+  }, 500);
+}
+
+/* ========== OCR Form actions ========== */
+document.getElementById('ocrCancel').addEventListener('click', () => {
+  document.getElementById('ocrProgress').classList.remove('show');
+  document.getElementById('ocrForm').classList.remove('show');
+  document.getElementById('uploadArea').style.display = '';
+});
+
+document.getElementById('ocrConfirm').addEventListener('click', () => {
+  addRecord(
+    document.getElementById('ocrDate').value,
+    document.getElementById('ocrDesc').value,
+    document.getElementById('ocrChange').value,
+    document.getElementById('ocrAfter').value,
+    document.getElementById('ocrRemark').value
+  );
+  document.getElementById('ocrProgress').classList.remove('show');
+  document.getElementById('ocrForm').classList.remove('show');
+  document.getElementById('uploadArea').style.display = '';
+});
+
+/* ========== Manual entry ========== */
+document.getElementById('manualConfirm').addEventListener('click', () => {
+  addRecord(
+    document.getElementById('manualDate').value,
+    document.getElementById('manualDesc').value,
+    document.getElementById('manualChange').value,
+    document.getElementById('manualAfter').value,
+    document.getElementById('manualRemark').value
+  );
+  document.getElementById('manualDate').value = new Date().toISOString().split('T')[0];
+  document.getElementById('manualDesc').value = '';
+  document.getElementById('manualChange').value = '';
+  document.getElementById('manualAfter').value = '';
+  document.getElementById('manualRemark').value = '';
+});
+
+document.getElementById('manualReset').addEventListener('click', () => {
+  document.getElementById('manualDate').value = new Date().toISOString().split('T')[0];
+  document.getElementById('manualDesc').value = '';
+  document.getElementById('manualChange').value = '';
+  document.getElementById('manualAfter').value = '';
+  document.getElementById('manualRemark').value = '';
+});
+
+/* ========== Add record ========== */
+function addRecord(date, desc, change, after, remark) {
+  if (!change && !after) {
+    showToast('请至少填写变动金额或变动后余额');
+    return;
+  }
+
+  const records = loadRecords();
+  const changeVal = parseFloat(String(change).replace(/[+＋,，]/g, '').replace(/[－]/g, '-')) || 0;
+  let afterVal = parseFloat(String(after).replace(/[,，]/g, '')) || null;
+
+  const lastBalance = getLastBalance();
+
+  let beforeVal = null;
+  if (afterVal !== null && changeVal !== 0) {
+    beforeVal = afterVal - changeVal;
+  } else if (lastBalance !== null) {
+    beforeVal = lastBalance;
+    if (afterVal === null && changeVal !== 0) {
+      afterVal = beforeVal + changeVal;
+    }
+  }
+
+  if (afterVal === null && changeVal !== 0 && beforeVal !== null) {
+    afterVal = beforeVal + changeVal;
+  }
+
+  const record = {
+    id: Date.now(),
+    date: date || new Date().toISOString().split('T')[0],
+    description: desc || '未知交易',
+    balanceBefore: beforeVal !== null ? Math.round(beforeVal * 100) / 100 : null,
+    change: Math.round(changeVal * 100) / 100,
+    balanceAfter: afterVal !== null ? Math.round(afterVal * 100) / 100 : null,
+    remark: remark || ''
+  };
+
+  records.push(record);
+  records.sort((a, b) => new Date(a.date) - new Date(b.date));
+  saveRecords(records);
+  updateHeader();
+  showToast('添加成功');
+}
+
+/* ========== Render records ========== */
+function renderRecords() {
+  const records = loadRecords();
+  const list = document.getElementById('recordList');
+  const actions = document.getElementById('bottomActions');
+
+  if (records.length === 0) {
+    list.innerHTML = '<div class="empty-state">暂无记录</div>';
+    actions.style.display = 'none';
+    document.getElementById('totalIncome').textContent = '0.00';
+    document.getElementById('totalExpense').textContent = '0.00';
+    return;
+  }
+
+  actions.style.display = 'flex';
+  let totalIn = 0, totalOut = 0;
+  records.forEach(r => {
+    if (r.change > 0) totalIn += r.change;
+    else totalOut += Math.abs(r.change);
+  });
+  document.getElementById('totalIncome').textContent = formatMoney(totalIn);
+  document.getElementById('totalExpense').textContent = formatMoney(totalOut);
+
+  const reversed = [...records].reverse();
+  list.innerHTML = reversed.map(r => {
+    const isPositive = r.change >= 0;
+    const amountStr = (isPositive ? '+' : '') + formatMoney(r.change);
+    return `
+      <div class="record-card" data-id="${r.id}">
+        <div class="record-top" onclick="toggleDetail(${r.id})">
+          <div>
+            <div class="record-desc">${escapeHtml(r.description)}</div>
+          </div>
+          <div class="record-amount ${isPositive ? 'positive' : 'negative'}">${amountStr}</div>
+        </div>
+        <div class="record-bottom" onclick="toggleDetail(${r.id})">
+          <span>${r.date}</span>
+          <span>余额: ${r.balanceAfter !== null ? formatMoney(r.balanceAfter) : '--'}</span>
+        </div>
+        <div class="record-detail" id="detail-${r.id}">
+          <div class="detail-row"><span>变动前余额</span><span>${r.balanceBefore !== null ? formatMoney(r.balanceBefore) : '--'}</span></div>
+          <div class="detail-row"><span>变动金额</span><span>${amountStr}</span></div>
+          <div class="detail-row"><span>变动后余额</span><span>${r.balanceAfter !== null ? formatMoney(r.balanceAfter) : '--'}</span></div>
+          <div style="margin-top:8px">
+            <label class="form-label">备注</label>
+            <input class="remark-edit" type="text" value="${escapeHtml(r.remark)}" placeholder="点击编辑备注"
+              onchange="updateRemark(${r.id}, this.value)">
+          </div>
+          <button class="delete-btn" onclick="deleteRecord(${r.id})">删除此条</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function escapeHtml(str) {
+  const d = document.createElement('div');
+  d.textContent = str || '';
+  return d.innerHTML;
+}
+
+function toggleDetail(id) {
+  const el = document.getElementById('detail-' + id);
+  if (el) el.classList.toggle('show');
+}
+
+function updateRemark(id, value) {
+  const records = loadRecords();
+  const r = records.find(r => r.id === id);
+  if (r) {
+    r.remark = value;
+    saveRecords(records);
+    showToast('备注已更新');
+  }
+}
+
+function deleteRecord(id) {
+  if (!confirm('确定删除这条记录？')) return;
+  let records = loadRecords();
+  records = records.filter(r => r.id !== id);
+  saveRecords(records);
+  renderRecords();
+  updateHeader();
+  showToast('已删除');
+}
+
+/* ========== Export ========== */
+document.getElementById('exportBtn').addEventListener('click', () => {
+  const records = loadRecords();
+  if (records.length === 0) { showToast('暂无记录可导出'); return; }
+
+  const BOM = '﻿';
+  const header = '序号,日期,交易描述,变动前余额,变动金额,变动后余额,备注\n';
+  const rows = records.map((r, i) => {
+    return [
+      i + 1,
+      r.date,
+      '"' + (r.description || '').replace(/"/g, '""') + '"',
+      r.balanceBefore !== null ? r.balanceBefore : '',
+      r.change,
+      r.balanceAfter !== null ? r.balanceAfter : '',
+      '"' + (r.remark || '').replace(/"/g, '""') + '"'
+    ].join(',');
+  }).join('\n');
+
+  const blob = new Blob([BOM + header + rows], { type: 'text/csv;charset=utf-8;' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = '零钱通账本_' + new Date().toISOString().split('T')[0] + '.csv';
+  a.click();
+  URL.revokeObjectURL(a.href);
+  showToast('导出成功');
+});
+
+/* ========== Clear ========== */
+document.getElementById('clearBtn').addEventListener('click', () => {
+  if (!confirm('确定清空所有记录？此操作不可恢复！')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  renderRecords();
+  updateHeader();
+  showToast('已清空');
+});
+
+/* ========== Header ========== */
+function updateHeader() {
+  const records = loadRecords();
+  const el = document.getElementById('currentBalance');
+  if (records.length === 0) {
+    el.textContent = '--';
+  } else {
+    const last = records[records.length - 1];
+    el.textContent = last.balanceAfter !== null ? '¥' + formatMoney(last.balanceAfter) : '--';
+  }
+}
+
+/* ========== Init ========== */
+updateHeader();
+document.getElementById('manualDate').value = new Date().toISOString().split('T')[0];
+</script>
+</body>
+</html>
