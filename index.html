@@ -25,9 +25,7 @@ body {
   position: absolute; top: 20px; right: 16px;
   font-size: 20px; cursor: pointer; opacity: 0.9;
 }
-.sync-status {
-  font-size: 11px; opacity: 0.7; margin-top: 4px;
-}
+.sync-status { font-size: 11px; opacity: 0.7; margin-top: 4px; }
 
 .tabs {
   display: flex; background: #fff;
@@ -52,7 +50,7 @@ body {
 .upload-area {
   background: #fff; border-radius: 12px; padding: 32px 20px;
   text-align: center; margin-bottom: 16px;
-  border: 2px dashed #ddd; transition: border-color 0.2s;
+  border: 2px dashed #ddd;
 }
 .upload-icon { font-size: 48px; margin-bottom: 12px; display: block; }
 .upload-text { font-size: 15px; color: #666; margin-bottom: 16px; }
@@ -80,7 +78,49 @@ input[type="file"] { display: none; }
 .progress-text { font-size: 13px; color: #999; text-align: center; }
 .preview-img {
   max-width: 100%; max-height: 200px; border-radius: 8px;
-  margin-bottom: 12px; object-fit: contain;
+  margin-bottom: 12px; object-fit: contain; cursor: pointer;
+}
+
+/* Fullscreen image overlay */
+.img-overlay {
+  display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.9); z-index: 1000;
+  justify-content: center; align-items: center;
+}
+.img-overlay.show { display: flex; }
+.img-overlay img {
+  max-width: 95%; max-height: 95%; object-fit: contain;
+  border-radius: 4px;
+}
+.img-overlay-close {
+  position: absolute; top: 16px; right: 16px;
+  color: #fff; font-size: 28px; cursor: pointer;
+  background: none; border: none; padding: 8px;
+}
+
+/* Multi-record OCR result list */
+.ocr-result-list {
+  background: #fff; border-radius: 12px;
+  padding: 16px; margin-bottom: 16px; display: none;
+}
+.ocr-result-list.show { display: block; }
+.ocr-result-title { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
+.ocr-result-hint { font-size: 12px; color: #999; margin-bottom: 14px; }
+.ocr-item {
+  display: flex; align-items: center; padding: 12px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+.ocr-item:last-child { border-bottom: none; }
+.ocr-item-check { margin-right: 12px; width: 20px; height: 20px; accent-color: #07C160; }
+.ocr-item-info { flex: 1; }
+.ocr-item-desc { font-size: 14px; font-weight: 500; }
+.ocr-item-date { font-size: 12px; color: #999; margin-top: 2px; }
+.ocr-item-amount { font-size: 16px; font-weight: 600; text-align: right; min-width: 90px; }
+.ocr-item-amount.pos { color: #07C160; }
+.ocr-item-amount.neg { color: #ff4d4f; }
+.ocr-item-filtered { opacity: 0.4; }
+.ocr-item-filtered .ocr-item-desc::after {
+  content: '（已过滤）'; font-size: 11px; color: #999; font-weight: 400; margin-left: 6px;
 }
 
 .record-form {
@@ -95,7 +135,7 @@ input[type="file"] { display: none; }
   width: 100%; padding: 10px 12px; border: 1px solid #e8e8e8;
   border-radius: 8px; font-size: 15px; color: #333;
   -webkit-appearance: none; appearance: none;
-  background: #fafafa; transition: border-color 0.2s;
+  background: #fafafa;
 }
 .form-input:focus { border-color: #07C160; outline: none; background: #fff; }
 .form-row { display: flex; gap: 12px; }
@@ -110,9 +150,7 @@ input[type="file"] { display: none; }
 .btn-secondary { background: #f5f5f5; color: #666; }
 .btn-secondary:active { background: #eee; }
 
-.summary-cards {
-  display: flex; gap: 10px; margin-bottom: 16px;
-}
+.summary-cards { display: flex; gap: 10px; margin-bottom: 16px; }
 .summary-card {
   flex: 1; background: #fff; border-radius: 10px;
   padding: 14px 12px; text-align: center;
@@ -147,14 +185,8 @@ input[type="file"] { display: none; }
   -webkit-appearance: none; appearance: none;
 }
 .remark-edit:focus { border-color: #07C160; outline: none; }
-
-.empty-state {
-  text-align: center; padding: 60px 20px; color: #bbb; font-size: 15px;
-}
-
-.bottom-actions {
-  padding: 16px 0; display: flex; gap: 12px;
-}
+.empty-state { text-align: center; padding: 60px 20px; color: #bbb; font-size: 15px; }
+.bottom-actions { padding: 16px 0; display: flex; gap: 12px; }
 .action-btn {
   flex: 1; padding: 12px; border-radius: 8px;
   font-size: 14px; border: none; cursor: pointer;
@@ -170,13 +202,11 @@ input[type="file"] { display: none; }
   opacity: 0; transition: opacity 0.3s; pointer-events: none;
 }
 .toast.show { opacity: 1; }
-
 .delete-btn {
   background: none; border: none; color: #ff4d4f;
   font-size: 12px; cursor: pointer; padding: 4px 8px; margin-top: 6px;
 }
 
-/* Settings */
 .settings-card {
   background: #fff; border-radius: 12px;
   padding: 20px; margin-bottom: 16px;
@@ -222,7 +252,7 @@ input[type="file"] { display: none; }
 <div class="tab-content active" id="tab-capture">
   <div class="upload-area" id="uploadArea">
     <span class="upload-icon">📷</span>
-    <div class="upload-text">上传零钱通截图，自动识别交易信息</div>
+    <div class="upload-text">上传零钱通明细截图，自动识别多条交易</div>
     <button class="upload-btn" id="uploadBtn">选择图片</button>
     <input type="file" id="fileInput" accept="image/*">
   </div>
@@ -233,33 +263,13 @@ input[type="file"] { display: none; }
     </div>
     <div class="progress-text" id="progressText">准备识别...</div>
   </div>
-  <div class="record-form" id="ocrForm">
-    <div class="form-title">识别结果（可编辑）</div>
-    <div class="form-group">
-      <label class="form-label">日期</label>
-      <input class="form-input" type="date" id="ocrDate">
-    </div>
-    <div class="form-group">
-      <label class="form-label">交易描述</label>
-      <input class="form-input" type="text" id="ocrDesc" placeholder="如：转入、转出、收益...">
-    </div>
-    <div class="form-row">
-      <div class="form-group">
-        <label class="form-label">变动金额</label>
-        <input class="form-input" type="text" id="ocrChange" placeholder="+100 或 -50">
-      </div>
-      <div class="form-group">
-        <label class="form-label">变动后余额</label>
-        <input class="form-input" type="text" id="ocrAfter" placeholder="余额">
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="form-label">备注（类型/原因）</label>
-      <input class="form-input" type="text" id="ocrRemark" placeholder="选填">
-    </div>
+  <div class="ocr-result-list" id="ocrResultList">
+    <div class="ocr-result-title">识别结果</div>
+    <div class="ocr-result-hint">已自动过滤「收益入账」，勾选要记录的交易</div>
+    <div id="ocrItems"></div>
     <div class="form-actions">
-      <button class="btn btn-secondary" id="ocrCancel">取消</button>
-      <button class="btn btn-primary" id="ocrConfirm">确认添加</button>
+      <button class="btn btn-secondary" id="ocrCancelAll">取消</button>
+      <button class="btn btn-primary" id="ocrConfirmAll">确认添加</button>
     </div>
   </div>
 </div>
@@ -273,16 +283,12 @@ input[type="file"] { display: none; }
     </div>
     <div class="form-group">
       <label class="form-label">交易描述</label>
-      <input class="form-input" type="text" id="manualDesc" placeholder="如：转入、转出、收益...">
+      <input class="form-input" type="text" id="manualDesc" placeholder="如：转入、转出、微信转账...">
     </div>
     <div class="form-row">
       <div class="form-group">
         <label class="form-label">变动金额</label>
         <input class="form-input" type="text" id="manualChange" placeholder="+100 或 -50">
-      </div>
-      <div class="form-group">
-        <label class="form-label">变动后余额</label>
-        <input class="form-input" type="text" id="manualAfter" placeholder="余额">
       </div>
     </div>
     <div class="form-group">
@@ -316,8 +322,23 @@ input[type="file"] { display: none; }
 
 <div class="tab-content" id="tab-settings">
   <div class="settings-card">
+    <div class="form-title">初始余额</div>
+    <div class="settings-desc">首次使用时设置当前零钱通余额，后续交易的变动前后余额会基于此自动计算。</div>
+    <div class="form-row">
+      <div class="form-group">
+        <input class="form-input" type="number" id="initBalanceInput" placeholder="输入当前零钱通余额" step="0.01">
+      </div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-primary" id="saveInitBalance">保存初始余额</button>
+    </div>
+    <div id="initBalanceDisplay" style="display:none; margin-top:12px;">
+      <div class="token-display" id="initBalanceValue"></div>
+    </div>
+  </div>
+  <div class="settings-card">
     <div class="form-title">云端同步</div>
-    <div class="settings-desc">数据自动同步到 GitHub 仓库，换手机、清缓存都不会丢失数据。</div>
+    <div class="settings-desc">数据自动同步到 GitHub，换手机、清缓存都不会丢。</div>
     <div id="tokenSection">
       <div class="form-group">
         <label class="form-label">GitHub Token</label>
@@ -335,12 +356,16 @@ input[type="file"] { display: none; }
       </div>
     </div>
   </div>
-  <div class="sync-info" id="syncInfo">
+  <div class="sync-info">
     <div><span class="sync-dot off" id="syncDot"></span>同步状态：<span id="syncDetail">未配置</span></div>
     <div style="margin-top:6px;">上次同步：<span id="lastSyncTime">无</span></div>
   </div>
 </div>
 
+<div class="img-overlay" id="imgOverlay">
+  <button class="img-overlay-close" id="imgOverlayClose">✕</button>
+  <img id="imgOverlayImg" src="" alt="放大预览">
+</div>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -349,6 +374,9 @@ const TOKEN_KEY = 'lingqiantong_token';
 const GITHUB_OWNER = 'guojuanjuan1';
 const GITHUB_REPO = 'lingqiantong';
 const DATA_FILE = 'data.json';
+
+const INIT_BALANCE_KEY = 'lingqiantong_init_balance';
+const IGNORE_KEYWORDS = ['收益入账', '收益发放', '基金收益'];
 
 function loadRecords() {
   try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
@@ -362,7 +390,7 @@ function saveRecords(records) {
 
 function getToken() { return localStorage.getItem(TOKEN_KEY) || ''; }
 function setToken(t) { localStorage.setItem(TOKEN_KEY, t); }
-function clearToken() { localStorage.removeItem(TOKEN_KEY); }
+function clearTokenStore() { localStorage.removeItem(TOKEN_KEY); }
 
 function showToast(msg) {
   const t = document.getElementById('toast');
@@ -377,9 +405,14 @@ function formatMoney(n) {
   return num.toFixed(2);
 }
 
+function getInitBalance() {
+  const v = localStorage.getItem(INIT_BALANCE_KEY);
+  return v !== null ? parseFloat(v) : null;
+}
+
 function getLastBalance() {
   const records = loadRecords();
-  if (records.length === 0) return null;
+  if (records.length === 0) return getInitBalance();
   return records[records.length - 1].balanceAfter;
 }
 
@@ -400,10 +433,8 @@ let fileSha = null;
 async function syncToGitHub() {
   const token = getToken();
   if (!token) return;
-
   const records = loadRecords();
   const content = btoa(unescape(encodeURIComponent(JSON.stringify(records, null, 2))));
-
   try {
     const existing = await fetch(
       `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${DATA_FILE}`,
@@ -413,59 +444,40 @@ async function syncToGitHub() {
       const data = await existing.json();
       fileSha = data.sha;
     }
-
-    const body = {
-      message: '同步账本数据 ' + new Date().toLocaleString('zh-CN'),
-      content: content,
-    };
+    const body = { message: '同步账本 ' + new Date().toLocaleString('zh-CN'), content };
     if (fileSha) body.sha = fileSha;
-
     const res = await fetch(
       `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${DATA_FILE}`,
-      {
-        method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(body),
-      }
+      { method: 'PUT', headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }, body: JSON.stringify(body) }
     );
-
     if (res.ok) {
       const result = await res.json();
       fileSha = result.content.sha;
       updateSyncUI('ok', '同步成功');
-      document.getElementById('lastSyncTime').textContent = new Date().toLocaleString('zh-CN');
+      const now = new Date().toLocaleString('zh-CN');
+      document.getElementById('lastSyncTime').textContent = now;
       localStorage.setItem('lingqiantong_last_sync', new Date().toISOString());
     } else {
-      const err = await res.json();
-      updateSyncUI('err', err.message || '同步失败');
+      updateSyncUI('err', '同步失败');
     }
-  } catch (e) {
-    updateSyncUI('err', '网络错误');
-  }
+  } catch { updateSyncUI('err', '网络错误'); }
 }
 
 async function loadFromGitHub() {
   const token = getToken();
   if (!token) return;
-
   updateSyncUI('off', '正在加载...');
-
   try {
     const res = await fetch(
       `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${DATA_FILE}`,
       { headers: { 'Authorization': `Bearer ${token}` } }
     );
-
     if (res.ok) {
       const data = await res.json();
       fileSha = data.sha;
       const content = decodeURIComponent(escape(atob(data.content.replace(/\n/g, ''))));
       const remoteRecords = JSON.parse(content);
       const localRecords = loadRecords();
-
       if (remoteRecords.length > 0) {
         const merged = mergeRecords(localRecords, remoteRecords);
         localStorage.setItem(STORAGE_KEY, JSON.stringify(merged));
@@ -475,12 +487,9 @@ async function loadFromGitHub() {
     } else if (res.status === 404) {
       updateSyncUI('ok', '已连接（暂无云端数据）');
     } else {
-      const err = await res.json();
-      updateSyncUI('err', err.message || '加载失败');
+      updateSyncUI('err', '加载失败');
     }
-  } catch (e) {
-    updateSyncUI('err', '网络错误');
-  }
+  } catch { updateSyncUI('err', '网络错误'); }
   updateHeader();
 }
 
@@ -488,9 +497,7 @@ function mergeRecords(local, remote) {
   const map = new Map();
   remote.forEach(r => map.set(r.id, r));
   local.forEach(r => map.set(r.id, r));
-  const merged = Array.from(map.values());
-  merged.sort((a, b) => new Date(a.date) - new Date(b.date));
-  return merged;
+  return Array.from(map.values()).sort((a, b) => new Date(a.date) - new Date(b.date));
 }
 
 /* ========== Tabs ========== */
@@ -501,13 +508,10 @@ document.querySelectorAll('.tab').forEach(tab => {
     tab.classList.add('active');
     document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
     if (tab.dataset.tab === 'records') renderRecords();
-    if (tab.dataset.tab === 'manual') {
-      document.getElementById('manualDate').value = new Date().toISOString().split('T')[0];
-    }
+    if (tab.dataset.tab === 'manual') document.getElementById('manualDate').value = today();
     if (tab.dataset.tab === 'settings') renderSettings();
   });
 });
-
 document.getElementById('settingsIcon').addEventListener('click', () => {
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
@@ -516,23 +520,40 @@ document.getElementById('settingsIcon').addEventListener('click', () => {
   renderSettings();
 });
 
+function today() { return new Date().toISOString().split('T')[0]; }
+
+/* ========== Settings ========== */
+document.getElementById('saveInitBalance').addEventListener('click', () => {
+  const val = parseFloat(document.getElementById('initBalanceInput').value);
+  if (isNaN(val)) { showToast('请输入有效金额'); return; }
+  localStorage.setItem(INIT_BALANCE_KEY, val.toString());
+  renderSettings();
+  updateHeader();
+  showToast('初始余额已保存: ¥' + formatMoney(val));
+});
+
 function renderSettings() {
+  const initBal = getInitBalance();
+  if (initBal !== null) {
+    document.getElementById('initBalanceInput').value = initBal;
+    document.getElementById('initBalanceDisplay').style.display = 'block';
+    document.getElementById('initBalanceValue').textContent = '当前初始余额: ¥' + formatMoney(initBal);
+  } else {
+    document.getElementById('initBalanceDisplay').style.display = 'none';
+  }
+
   const token = getToken();
   if (token) {
     document.getElementById('tokenSection').style.display = 'none';
     document.getElementById('tokenSaved').style.display = 'block';
-    document.getElementById('tokenPreview').textContent =
-      token.substring(0, 12) + '****' + token.substring(token.length - 4);
+    document.getElementById('tokenPreview').textContent = token.substring(0, 12) + '****' + token.substring(token.length - 4);
   } else {
     document.getElementById('tokenSection').style.display = 'block';
     document.getElementById('tokenSaved').style.display = 'none';
   }
   const lastSync = localStorage.getItem('lingqiantong_last_sync');
-  if (lastSync) {
-    document.getElementById('lastSyncTime').textContent = new Date(lastSync).toLocaleString('zh-CN');
-  }
+  if (lastSync) document.getElementById('lastSyncTime').textContent = new Date(lastSync).toLocaleString('zh-CN');
 }
-
 document.getElementById('saveTokenBtn').addEventListener('click', () => {
   const token = document.getElementById('tokenInput').value.trim();
   if (!token) { showToast('请输入 Token'); return; }
@@ -542,17 +563,13 @@ document.getElementById('saveTokenBtn').addEventListener('click', () => {
   showToast('Token 已保存');
   loadFromGitHub();
 });
-
 document.getElementById('clearTokenBtn').addEventListener('click', () => {
-  if (!confirm('确定清除 Token？清除后数据不再同步到云端。')) return;
-  clearToken();
-  fileSha = null;
-  renderSettings();
+  if (!confirm('确定清除 Token？')) return;
+  clearTokenStore(); fileSha = null; renderSettings();
   updateSyncUI('off', '未配置');
   document.getElementById('syncStatus').textContent = '';
   showToast('Token 已清除');
 });
-
 document.getElementById('forceSyncBtn').addEventListener('click', async () => {
   showToast('同步中...');
   await loadFromGitHub();
@@ -567,10 +584,7 @@ const uploadBtn = document.getElementById('uploadBtn');
 const uploadArea = document.getElementById('uploadArea');
 
 uploadBtn.addEventListener('click', () => fileInput.click());
-uploadArea.addEventListener('click', (e) => {
-  if (e.target !== uploadBtn) fileInput.click();
-});
-
+uploadArea.addEventListener('click', (e) => { if (e.target !== uploadBtn) fileInput.click(); });
 fileInput.addEventListener('change', (e) => {
   const file = e.target.files[0];
   if (!file) return;
@@ -588,7 +602,7 @@ async function processImage(file) {
 
   uploadArea.style.display = 'none';
   ocrProgress.classList.add('show');
-  document.getElementById('ocrForm').classList.remove('show');
+  document.getElementById('ocrResultList').classList.remove('show');
 
   const reader = new FileReader();
   reader.onload = (e) => { previewImg.src = e.target.result; };
@@ -609,216 +623,219 @@ async function processImage(file) {
         }
       });
     }
-
     progressBar.style.width = '10%';
     progressText.textContent = '识别中...';
-
     const { data: { text } } = await ocrWorker.recognize(file);
-
     progressBar.style.width = '100%';
     progressText.textContent = '识别完成';
-
-    parseOCRResult(text);
+    parseOCRMulti(text);
   } catch (err) {
     progressText.textContent = '识别失败: ' + err.message;
-    setTimeout(() => {
-      ocrProgress.classList.remove('show');
-      uploadArea.style.display = '';
-    }, 2000);
+    setTimeout(() => { ocrProgress.classList.remove('show'); uploadArea.style.display = ''; }, 2000);
   }
 }
 
-function parseOCRResult(text) {
+/* ========== Multi-record OCR parser ========== */
+let parsedTransactions = [];
+
+function parseOCRMulti(text) {
   const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
+  const transactions = [];
 
-  let date = '';
-  let description = '';
-  let changeAmount = '';
-  let balanceAfter = '';
+  const dateTimeRe = /(\d{4})[年\-\/.](\d{1,2})[月\-\/.](\d{1,2})\s+(\d{1,2}:\d{2}(:\d{2})?)/;
+  const amountRe = /([+\-＋－])(\d+[\.,]?\d{0,2})/;
 
-  const datePatterns = [
-    /(\d{4})[年\-\/.](\d{1,2})[月\-\/.](\d{1,2})/,
-    /(\d{1,2})[月\-\/.](\d{1,2})[日号]/,
-  ];
+  for (let i = 0; i < lines.length; i++) {
+    const dateMatch = lines[i].match(dateTimeRe);
+    if (!dateMatch) continue;
 
-  const typeKeywords = [
-    '转入', '转出', '收益', '消费', '提现', '红包', '付款',
-    '退款', '充值', '还款', '零钱通', '理财', '工资',
-    '微信红包', '转账', '商户', '扫码'
-  ];
+    const date = `${dateMatch[1]}-${dateMatch[2].padStart(2,'0')}-${dateMatch[3].padStart(2,'0')}`;
+    const time = dateMatch[4];
 
-  const amountPattern = /[+\-＋－]?\s*¥?\s*(\d+[\.,]?\d{0,2})/g;
-  const balanceKeywords = ['余额', '账户余额', '零钱通余额', '剩余'];
+    let description = '';
+    let changeAmount = 0;
 
-  const fullText = lines.join(' ');
-
-  for (const line of lines) {
-    for (const pattern of datePatterns) {
-      const match = line.match(pattern);
-      if (match) {
-        if (match.length === 4) {
-          date = `${match[1]}-${match[2].padStart(2,'0')}-${match[3].padStart(2,'0')}`;
-        } else if (match.length === 3) {
-          const year = new Date().getFullYear();
-          date = `${year}-${match[1].padStart(2,'0')}-${match[2].padStart(2,'0')}`;
+    for (let j = i - 1; j >= Math.max(0, i - 3); j--) {
+      const amtMatch = lines[j].match(amountRe);
+      if (amtMatch) {
+        const sign = (amtMatch[1] === '-' || amtMatch[1] === '－') ? -1 : 1;
+        changeAmount = sign * parseFloat(amtMatch[2].replace(',', '.'));
+        const descLine = lines[j].replace(amountRe, '').replace(/[¥￥]/g, '').trim();
+        if (descLine) description = descLine;
+        if (!description && j > 0) {
+          const prevLine = lines[j - 1].trim();
+          if (prevLine && !prevLine.match(dateTimeRe) && !prevLine.match(/^余额/) && !prevLine.match(/^\d{4}[年\-]/)) {
+            description = prevLine;
+          }
         }
         break;
       }
-    }
-    if (date) break;
-  }
-
-  for (const line of lines) {
-    for (const kw of typeKeywords) {
-      if (line.includes(kw)) {
-        description = line;
-        break;
-      }
-    }
-    if (description) break;
-  }
-
-  const amounts = [];
-  let m;
-  while ((m = amountPattern.exec(fullText)) !== null) {
-    const val = parseFloat(m[1].replace(',', '.'));
-    if (!isNaN(val) && val > 0) {
-      const prefix = fullText.substring(Math.max(0, m.index - 5), m.index);
-      amounts.push({ value: val, prefix, fullMatch: m[0], index: m.index });
-    }
-  }
-
-  for (const line of lines) {
-    for (const bkw of balanceKeywords) {
-      if (line.includes(bkw)) {
-        const bMatch = line.match(/(\d+[\.,]?\d{0,2})/);
-        if (bMatch) {
-          balanceAfter = bMatch[1].replace(',', '.');
+      if (!description) {
+        const line = lines[j];
+        if (!line.match(dateTimeRe) && !line.match(/^余额/) && !line.match(/收入|支出/) && line.length > 1) {
+          description = line;
         }
-        break;
       }
     }
-    if (balanceAfter) break;
+
+    if (!description) {
+      for (let j = i - 1; j >= Math.max(0, i - 2); j--) {
+        if (lines[j].length > 1 && !lines[j].match(dateTimeRe)) {
+          description = lines[j].replace(amountRe, '').replace(/[¥￥]/g, '').trim();
+          break;
+        }
+      }
+    }
+
+    if (changeAmount === 0) continue;
+
+    const descNoSpace = description.replace(/\s/g, '');
+    const isIgnored = IGNORE_KEYWORDS.some(kw => descNoSpace.includes(kw));
+
+    transactions.push({
+      date, time, description: description || '未知交易',
+      change: Math.round(changeAmount * 100) / 100,
+      ignored: isIgnored, checked: !isIgnored
+    });
   }
 
-  if (amounts.length > 0 && !changeAmount) {
-    const mainAmount = amounts.reduce((a, b) => a.value > b.value ? a : b);
-    const isOut = fullText.includes('转出') || fullText.includes('消费') ||
-                  fullText.includes('付款') || fullText.includes('提现') ||
-                  fullText.includes('还款') || mainAmount.fullMatch.includes('-') ||
-                  mainAmount.fullMatch.includes('－');
-    changeAmount = (isOut ? '-' : '+') + formatMoney(mainAmount.value);
-  }
+  transactions.sort((a, b) => {
+    const da = new Date(a.date + 'T' + a.time);
+    const db = new Date(b.date + 'T' + b.time);
+    return da - db;
+  });
 
-  if (!date) {
-    date = new Date().toISOString().split('T')[0];
-  }
-
-  document.getElementById('ocrDate').value = date;
-  document.getElementById('ocrDesc').value = description;
-  document.getElementById('ocrChange').value = changeAmount;
-  document.getElementById('ocrAfter').value = balanceAfter;
-  document.getElementById('ocrRemark').value = '';
-
-  setTimeout(() => {
-    document.getElementById('ocrForm').classList.add('show');
-  }, 500);
+  parsedTransactions = transactions;
+  renderOCRResults();
 }
 
-/* ========== OCR Form actions ========== */
-document.getElementById('ocrCancel').addEventListener('click', () => {
-  document.getElementById('ocrProgress').classList.remove('show');
-  document.getElementById('ocrForm').classList.remove('show');
-  document.getElementById('uploadArea').style.display = '';
-});
-
-document.getElementById('ocrConfirm').addEventListener('click', () => {
-  addRecord(
-    document.getElementById('ocrDate').value,
-    document.getElementById('ocrDesc').value,
-    document.getElementById('ocrChange').value,
-    document.getElementById('ocrAfter').value,
-    document.getElementById('ocrRemark').value
-  );
-  document.getElementById('ocrProgress').classList.remove('show');
-  document.getElementById('ocrForm').classList.remove('show');
-  document.getElementById('uploadArea').style.display = '';
-});
-
-/* ========== Manual entry ========== */
-document.getElementById('manualConfirm').addEventListener('click', () => {
-  addRecord(
-    document.getElementById('manualDate').value,
-    document.getElementById('manualDesc').value,
-    document.getElementById('manualChange').value,
-    document.getElementById('manualAfter').value,
-    document.getElementById('manualRemark').value
-  );
-  document.getElementById('manualDate').value = new Date().toISOString().split('T')[0];
-  document.getElementById('manualDesc').value = '';
-  document.getElementById('manualChange').value = '';
-  document.getElementById('manualAfter').value = '';
-  document.getElementById('manualRemark').value = '';
-});
-
-document.getElementById('manualReset').addEventListener('click', () => {
-  document.getElementById('manualDate').value = new Date().toISOString().split('T')[0];
-  document.getElementById('manualDesc').value = '';
-  document.getElementById('manualChange').value = '';
-  document.getElementById('manualAfter').value = '';
-  document.getElementById('manualRemark').value = '';
-});
-
-/* ========== Add record ========== */
-function addRecord(date, desc, change, after, remark) {
-  if (!change && !after) {
-    showToast('请至少填写变动金额或变动后余额');
+function renderOCRResults() {
+  const container = document.getElementById('ocrItems');
+  if (parsedTransactions.length === 0) {
+    container.innerHTML = '<div class="empty-state" style="padding:20px;">未识别到交易记录，请尝试更清晰的截图</div>';
+    document.getElementById('ocrResultList').classList.add('show');
     return;
   }
 
+  container.innerHTML = parsedTransactions.map((t, i) => {
+    const isPos = t.change > 0;
+    const amountStr = (isPos ? '+' : '') + formatMoney(t.change);
+    const filteredClass = t.ignored ? ' ocr-item-filtered' : '';
+    return `
+      <div class="ocr-item${filteredClass}">
+        <input type="checkbox" class="ocr-item-check" data-idx="${i}" ${t.checked ? 'checked' : ''}>
+        <div class="ocr-item-info">
+          <div class="ocr-item-desc">${escapeHtml(t.description)}</div>
+          <div class="ocr-item-date">${t.date} ${t.time}</div>
+        </div>
+        <div class="ocr-item-amount ${isPos ? 'pos' : 'neg'}">${amountStr}</div>
+      </div>`;
+  }).join('');
+
+  document.querySelectorAll('.ocr-item-check').forEach(cb => {
+    cb.addEventListener('change', (e) => {
+      parsedTransactions[parseInt(e.target.dataset.idx)].checked = e.target.checked;
+    });
+  });
+
+  document.getElementById('ocrResultList').classList.add('show');
+}
+
+/* ========== OCR confirm / cancel ========== */
+document.getElementById('ocrCancelAll').addEventListener('click', () => {
+  document.getElementById('ocrProgress').classList.remove('show');
+  document.getElementById('ocrResultList').classList.remove('show');
+  uploadArea.style.display = '';
+  parsedTransactions = [];
+});
+
+document.getElementById('ocrConfirmAll').addEventListener('click', () => {
+  const toAdd = parsedTransactions.filter(t => t.checked);
+  if (toAdd.length === 0) { showToast('请至少勾选一条记录'); return; }
+  addMultipleRecords(toAdd);
+  document.getElementById('ocrProgress').classList.remove('show');
+  document.getElementById('ocrResultList').classList.remove('show');
+  uploadArea.style.display = '';
+  parsedTransactions = [];
+});
+
+/* ========== Add multiple records (balance from running total) ========== */
+function addMultipleRecords(items) {
   const records = loadRecords();
+  let runningBalance = getLastBalance();
+
+  items.sort((a, b) => {
+    const da = new Date(a.date + 'T' + a.time);
+    const db = new Date(b.date + 'T' + b.time);
+    return da - db;
+  });
+
+  for (const item of items) {
+    const beforeVal = runningBalance;
+    const afterVal = runningBalance !== null ? Math.round((runningBalance + item.change) * 100) / 100 : null;
+
+    records.push({
+      id: Date.now() + Math.floor(Math.random() * 1000),
+      date: item.date,
+      time: item.time || '',
+      description: item.description,
+      balanceBefore: beforeVal,
+      change: item.change,
+      balanceAfter: afterVal,
+      remark: ''
+    });
+
+    if (afterVal !== null) runningBalance = afterVal;
+  }
+
+  records.sort((a, b) => new Date(a.date) - new Date(b.date));
+  saveRecords(records);
+  updateHeader();
+  showToast(`已添加 ${items.length} 条记录`);
+}
+
+/* ========== Manual entry ========== */
+document.getElementById('manualConfirm').addEventListener('click', () => {
+  const change = document.getElementById('manualChange').value;
+  if (!change) { showToast('请填写变动金额'); return; }
+
   const changeVal = parseFloat(String(change).replace(/[+＋,，]/g, '').replace(/[－]/g, '-')) || 0;
-  let afterVal = parseFloat(String(after).replace(/[,，]/g, '')) || null;
+  const records = loadRecords();
+  const lastBal = getLastBalance();
+  const beforeVal = lastBal;
+  const afterVal = lastBal !== null ? Math.round((lastBal + changeVal) * 100) / 100 : null;
 
-  const lastBalance = getLastBalance();
-
-  let beforeVal = null;
-  if (afterVal !== null && changeVal !== 0) {
-    beforeVal = afterVal - changeVal;
-  } else if (lastBalance !== null) {
-    beforeVal = lastBalance;
-    if (afterVal === null && changeVal !== 0) {
-      afterVal = beforeVal + changeVal;
-    }
-  }
-
-  if (afterVal === null && changeVal !== 0 && beforeVal !== null) {
-    afterVal = beforeVal + changeVal;
-  }
-
-  const record = {
+  records.push({
     id: Date.now(),
-    date: date || new Date().toISOString().split('T')[0],
-    description: desc || '未知交易',
-    balanceBefore: beforeVal !== null ? Math.round(beforeVal * 100) / 100 : null,
+    date: document.getElementById('manualDate').value || today(),
+    description: document.getElementById('manualDesc').value || '未知交易',
+    balanceBefore: beforeVal,
     change: Math.round(changeVal * 100) / 100,
-    balanceAfter: afterVal !== null ? Math.round(afterVal * 100) / 100 : null,
-    remark: remark || ''
-  };
-
-  records.push(record);
+    balanceAfter: afterVal,
+    remark: document.getElementById('manualRemark').value || ''
+  });
   records.sort((a, b) => new Date(a.date) - new Date(b.date));
   saveRecords(records);
   updateHeader();
   showToast('添加成功');
-}
+  document.getElementById('manualDate').value = today();
+  document.getElementById('manualDesc').value = '';
+  document.getElementById('manualChange').value = '';
+  document.getElementById('manualRemark').value = '';
+});
+
+document.getElementById('manualReset').addEventListener('click', () => {
+  document.getElementById('manualDate').value = today();
+  document.getElementById('manualDesc').value = '';
+  document.getElementById('manualChange').value = '';
+  document.getElementById('manualRemark').value = '';
+});
 
 /* ========== Render records ========== */
 function renderRecords() {
   const records = loadRecords();
   const list = document.getElementById('recordList');
   const actions = document.getElementById('bottomActions');
-
   if (records.length === 0) {
     list.innerHTML = '<div class="empty-state">暂无记录</div>';
     actions.style.display = 'none';
@@ -826,13 +843,9 @@ function renderRecords() {
     document.getElementById('totalExpense').textContent = '0.00';
     return;
   }
-
   actions.style.display = 'flex';
   let totalIn = 0, totalOut = 0;
-  records.forEach(r => {
-    if (r.change > 0) totalIn += r.change;
-    else totalOut += Math.abs(r.change);
-  });
+  records.forEach(r => { if (r.change > 0) totalIn += r.change; else totalOut += Math.abs(r.change); });
   document.getElementById('totalIncome').textContent = formatMoney(totalIn);
   document.getElementById('totalExpense').textContent = formatMoney(totalOut);
 
@@ -840,12 +853,14 @@ function renderRecords() {
   list.innerHTML = reversed.map(r => {
     const isPositive = r.change >= 0;
     const amountStr = (isPositive ? '+' : '') + formatMoney(r.change);
+    const dateParts = r.date ? r.date.split('-') : [];
+    const shortDate = dateParts.length === 3 ? dateParts[1] + '-' + dateParts[2] : r.date;
+    const timeStr = r.time || '';
+    const titleLine = timeStr ? `${shortDate} ${timeStr}（${r.description}）` : `${shortDate}（${r.description}）`;
     return `
       <div class="record-card" data-id="${r.id}">
         <div class="record-top" onclick="toggleDetail(${r.id})">
-          <div>
-            <div class="record-desc">${escapeHtml(r.description)}</div>
-          </div>
+          <div><div class="record-desc">${escapeHtml(titleLine)}</div></div>
           <div class="record-amount ${isPositive ? 'positive' : 'negative'}">${amountStr}</div>
         </div>
         <div class="record-bottom" onclick="toggleDetail(${r.id})">
@@ -863,8 +878,7 @@ function renderRecords() {
           </div>
           <button class="delete-btn" onclick="deleteRecord(${r.id})">删除此条</button>
         </div>
-      </div>
-    `;
+      </div>`;
   }).join('');
 }
 
@@ -873,26 +887,18 @@ function escapeHtml(str) {
   d.textContent = str || '';
   return d.innerHTML;
 }
-
 function toggleDetail(id) {
   const el = document.getElementById('detail-' + id);
   if (el) el.classList.toggle('show');
 }
-
 function updateRemark(id, value) {
   const records = loadRecords();
   const r = records.find(r => r.id === id);
-  if (r) {
-    r.remark = value;
-    saveRecords(records);
-    showToast('备注已更新');
-  }
+  if (r) { r.remark = value; saveRecords(records); showToast('备注已更新'); }
 }
-
 function deleteRecord(id) {
   if (!confirm('确定删除这条记录？')) return;
-  let records = loadRecords();
-  records = records.filter(r => r.id !== id);
+  let records = loadRecords().filter(r => r.id !== id);
   saveRecords(records);
   renderRecords();
   updateHeader();
@@ -903,36 +909,29 @@ function deleteRecord(id) {
 document.getElementById('exportBtn').addEventListener('click', () => {
   const records = loadRecords();
   if (records.length === 0) { showToast('暂无记录可导出'); return; }
-
   const BOM = '﻿';
   const header = '序号,日期,交易描述,变动前余额,变动金额,变动后余额,备注\n';
-  const rows = records.map((r, i) => {
-    return [
-      i + 1, r.date,
-      '"' + (r.description || '').replace(/"/g, '""') + '"',
-      r.balanceBefore !== null ? r.balanceBefore : '',
-      r.change,
-      r.balanceAfter !== null ? r.balanceAfter : '',
-      '"' + (r.remark || '').replace(/"/g, '""') + '"'
-    ].join(',');
-  }).join('\n');
-
+  const rows = records.map((r, i) => [
+    i + 1, r.date,
+    '"' + (r.description || '').replace(/"/g, '""') + '"',
+    r.balanceBefore !== null ? r.balanceBefore : '',
+    r.change,
+    r.balanceAfter !== null ? r.balanceAfter : '',
+    '"' + (r.remark || '').replace(/"/g, '""') + '"'
+  ].join(',')).join('\n');
   const blob = new Blob([BOM + header + rows], { type: 'text/csv;charset=utf-8;' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = '零钱通账本_' + new Date().toISOString().split('T')[0] + '.csv';
+  a.download = '零钱通账本_' + today() + '.csv';
   a.click();
   URL.revokeObjectURL(a.href);
   showToast('导出成功');
 });
 
-/* ========== Clear ========== */
 document.getElementById('clearBtn').addEventListener('click', () => {
   if (!confirm('确定清空所有记录？此操作不可恢复！')) return;
   localStorage.removeItem(STORAGE_KEY);
-  renderRecords();
-  updateHeader();
-  syncToGitHub();
+  renderRecords(); updateHeader(); syncToGitHub();
   showToast('已清空');
 });
 
@@ -941,19 +940,31 @@ function updateHeader() {
   const records = loadRecords();
   const el = document.getElementById('currentBalance');
   if (records.length === 0) {
-    el.textContent = '--';
+    const initBal = getInitBalance();
+    el.textContent = initBal !== null ? '¥' + formatMoney(initBal) : '--';
   } else {
     const last = records[records.length - 1];
     el.textContent = last.balanceAfter !== null ? '¥' + formatMoney(last.balanceAfter) : '--';
   }
 }
 
+/* ========== Image enlarge ========== */
+document.getElementById('previewImg').addEventListener('click', () => {
+  const overlay = document.getElementById('imgOverlay');
+  document.getElementById('imgOverlayImg').src = document.getElementById('previewImg').src;
+  overlay.classList.add('show');
+});
+document.getElementById('imgOverlayClose').addEventListener('click', () => {
+  document.getElementById('imgOverlay').classList.remove('show');
+});
+document.getElementById('imgOverlay').addEventListener('click', (e) => {
+  if (e.target === e.currentTarget) document.getElementById('imgOverlay').classList.remove('show');
+});
+
 /* ========== Init ========== */
 updateHeader();
-document.getElementById('manualDate').value = new Date().toISOString().split('T')[0];
-if (getToken()) {
-  loadFromGitHub();
-}
+document.getElementById('manualDate').value = today();
+if (getToken()) loadFromGitHub();
 </script>
 </body>
 </html>
