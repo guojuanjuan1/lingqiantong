@@ -1,4 +1,95 @@
 {
   "initBalance": 84448,
-  "records": []
+  "records": [
+    {
+      "id": 1785930153362,
+      "date": "2026-05-27",
+      "time": "11:16:59",
+      "description": "零钱 通 转 出 -到 银行 卡",
+      "balanceBefore": 84448,
+      "change": -9500,
+      "balanceAfter": 74948,
+      "remark": ""
+    },
+    {
+      "id": 1785930153079,
+      "date": "2026-06-01",
+      "time": "09:10:33",
+      "description": "微 信 转账",
+      "balanceBefore": 74948,
+      "change": -5000,
+      "balanceAfter": 69948,
+      "remark": ""
+    },
+    {
+      "id": 1785930153233,
+      "date": "2026-06-10",
+      "time": "15:30:54",
+      "description": "微 信 转账",
+      "balanceBefore": 69948,
+      "change": -5000,
+      "balanceAfter": 64948,
+      "remark": ""
+    },
+    {
+      "id": 1785930153573,
+      "date": "2026-06-16",
+      "time": "15:31:39",
+      "description": "零钱 通 转 出 -到 银行 卡",
+      "balanceBefore": 64948,
+      "change": -7819,
+      "balanceAfter": 57129,
+      "remark": ""
+    },
+    {
+      "id": 1785930153428,
+      "date": "2026-06-22",
+      "time": "10:46:54",
+      "description": "微 信 转账",
+      "balanceBefore": 57129,
+      "change": -1400,
+      "balanceAfter": 55729,
+      "remark": ""
+    },
+    {
+      "id": 1785930153620,
+      "date": "2026-07-06",
+      "time": "13:58:38",
+      "description": "美 团 平台 商户",
+      "balanceBefore": 55729,
+      "change": -286,
+      "balanceAfter": 55443,
+      "remark": ""
+    },
+    {
+      "id": 1785930152730,
+      "date": "2026-07-06",
+      "time": "14:08:39",
+      "description": "微 信 转账",
+      "balanceBefore": 55443,
+      "change": -5000,
+      "balanceAfter": 50443,
+      "remark": ""
+    },
+    {
+      "id": 1785930152719,
+      "date": "2026-07-19",
+      "time": "19:28:01",
+      "description": "微 信 转账",
+      "balanceBefore": 50443,
+      "change": -240,
+      "balanceAfter": 50203,
+      "remark": ""
+    },
+    {
+      "id": 1785930153424,
+      "date": "2026-07-20",
+      "time": "10:03:45",
+      "description": "北京 便利 蜂 连 锁 商 业 有 限 公司 0",
+      "balanceBefore": 50203,
+      "change": -21.35,
+      "balanceAfter": 50181.65,
+      "remark": ""
+    }
+  ]
 }
