@@ -1,1 +1,32 @@
-[]
+[
+  {
+    "id": 1785929111477,
+    "date": "2026-05-27",
+    "time": "11:16:59",
+    "description": "零钱 通 转 出 -到 银行 卡",
+    "balanceBefore": 84448,
+    "change": -9500,
+    "balanceAfter": 74948,
+    "remark": ""
+  },
+  {
+    "id": 1785929111323,
+    "date": "2026-05-27",
+    "time": "11:17:23",
+    "description": "零钱 通 转 出 -到 零钱",
+    "balanceBefore": 74948,
+    "change": -500,
+    "balanceAfter": 74448,
+    "remark": ""
+  },
+  {
+    "id": 1785929111224,
+    "date": "2026-05-28",
+    "time": "15:51:00",
+    "description": "理财 通 赎 回 - 德 邦 稳 僵 增长 灵活 配置",
+    "balanceBefore": 74448,
+    "change": 9587.68,
+    "balanceAfter": 84035.68,
+    "remark": ""
+  }
+]
