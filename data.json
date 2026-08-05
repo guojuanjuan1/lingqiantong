@@ -68,5 +68,25 @@
     "change": 5000,
     "balanceAfter": 93035.68,
     "remark": ""
+  },
+  {
+    "id": 1785929143000,
+    "date": "2026-06-04",
+    "time": "22:21:49",
+    "description": "理财 通 赎 回 -活期 十",
+    "balanceBefore": 93035.68,
+    "change": 63540,
+    "balanceAfter": 156575.68,
+    "remark": ""
+  },
+  {
+    "id": 1785929142429,
+    "date": "2026-06-10",
+    "time": "15:30:54",
+    "description": "微 信 转账",
+    "balanceBefore": 156575.68,
+    "change": -5000,
+    "balanceAfter": 151575.68,
+    "remark": ""
   }
 ]
